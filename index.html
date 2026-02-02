@@ -1,0 +1,384 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Обучение - Карточки для запоминания</title>
+
+    <!-- KaTeX для отображения формул -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css">
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js"></script>
+
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+    <!-- Декоративный фон (генерируется динамически) -->
+    <div class="decorations" aria-hidden="true"></div>
+
+    <div class="container">
+        <!-- Главный экран с разделами -->
+        <div id="main-screen" class="screen active">
+            <h1>Обучение</h1>
+            <p class="subtitle">Выберите раздел</p>
+            <div class="sections-grid">
+                <div class="section-card" data-section="math">
+                    <span class="section-icon">📐</span>
+                    <span class="section-title">Математика</span>
+                </div>
+                <div class="section-card" data-section="cs">
+                    <span class="section-icon">💻</span>
+                    <span class="section-title">Информатика</span>
+                </div>
+                <div class="section-card" data-section="russian">
+                    <span class="section-icon">📝</span>
+                    <span class="section-title">Русский</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Экран Математики -->
+        <div id="math-screen" class="screen">
+            <h1>Математика</h1>
+            <p class="subtitle">Выберите подраздел</p>
+            <div class="sections-grid">
+                <div class="section-card" data-subsection="algebra">
+                    <span class="section-icon">🔢</span>
+                    <span class="section-title">Алгебра</span>
+                </div>
+                <div class="section-card" data-subsection="geometry">
+                    <span class="section-icon">📐</span>
+                    <span class="section-title">Геометрия</span>
+                </div>
+                <div class="section-card" data-subsection="trig">
+                    <span class="section-icon">📊</span>
+                    <span class="section-title">Тригонометрия</span>
+                </div>
+            </div>
+            <button id="math-back-btn" class="btn btn-link">← Назад</button>
+        </div>
+
+        <!-- Пустой раздел -->
+        <div id="empty-screen" class="screen">
+            <h1 id="empty-title">Раздел</h1>
+            <div class="empty-content">
+                <span class="empty-icon">🚧</span>
+                <p>Этот раздел пока пуст</p>
+                <p class="subtitle">Скоро здесь появятся карточки</p>
+            </div>
+            <button id="empty-back-btn" class="btn btn-link">← Назад</button>
+        </div>
+
+        <!-- ===== РУССКИЙ ЯЗЫК ===== -->
+
+        <!-- Экран выбора подраздела русского языка -->
+        <div id="russian-screen" class="screen">
+            <h1>Русский язык</h1>
+            <p class="subtitle">Выберите раздел</p>
+            <div class="sections-grid">
+                <div class="section-card" id="russian-ege-btn">
+                    <span class="section-icon">📝</span>
+                    <span class="section-title">Задания ЕГЭ</span>
+                </div>
+                <div class="section-card" id="russian-rustutors-btn">
+                    <span class="section-icon">📚</span>
+                    <span class="section-title">РУСТЬЮТОРС</span>
+                </div>
+            </div>
+            <button id="russian-back-btn" class="btn btn-link">← Назад</button>
+        </div>
+
+        <!-- Экран списка заданий ЕГЭ -->
+        <div id="russian-ege-screen" class="screen">
+            <h1>Задания ЕГЭ</h1>
+            <p class="subtitle">Выберите задание</p>
+            <div class="tasks-list" id="russian-tasks-list">
+                <!-- Заполняется через JavaScript -->
+            </div>
+            <button id="russian-ege-back-btn" class="btn btn-link">← Назад</button>
+        </div>
+
+        <!-- Экран списка заданий РУСТЬЮТОРС -->
+        <div id="rustutors-screen" class="screen">
+            <h1>РУСТЬЮТОРС</h1>
+            <p class="subtitle">Полная теория с rustutors.ru</p>
+            <div class="tasks-list" id="rustutors-tasks-list">
+                <!-- Заполняется через JavaScript -->
+            </div>
+            <button id="rustutors-back-btn" class="btn btn-link">← Назад</button>
+        </div>
+
+        <!-- Экран просмотра задания РУСТЬЮТОРС -->
+        <div id="rustutors-task-screen" class="screen">
+            <div class="theory-header">
+                <h2 id="rustutors-task-title">Задание 1</h2>
+                <p class="subtitle" id="rustutors-task-subtitle">РУСТЬЮТОРС</p>
+            </div>
+            <div class="rustutors-content" id="rustutors-content">
+                <!-- Заполняется через JavaScript -->
+            </div>
+            <button id="rustutors-task-back-btn" class="btn btn-link">← К списку</button>
+        </div>
+
+        <!-- Экран выбора: Теория / Правила -->
+        <div id="russian-task-screen" class="screen">
+            <h1 id="russian-task-title">Задание 1</h1>
+            <p class="subtitle" id="russian-task-subtitle">Средства связи предложений</p>
+            <div class="sections-grid">
+                <div class="section-card" id="theory-btn">
+                    <span class="section-icon">📖</span>
+                    <span class="section-title">Теория</span>
+                </div>
+                <div class="section-card" id="rules-btn">
+                    <span class="section-icon">🎴</span>
+                    <span class="section-title">Правила</span>
+                </div>
+            </div>
+            <div class="task-stats">
+                <div class="stat">
+                    <span class="stat-value" id="russian-cards-total">0</span>
+                    <span class="stat-label">карточек</span>
+                </div>
+                <div class="stat">
+                    <span class="stat-value" id="russian-cards-learned">0</span>
+                    <span class="stat-label">изучено</span>
+                </div>
+            </div>
+            <button id="russian-task-back-btn" class="btn btn-link">← К списку заданий</button>
+        </div>
+
+        <!-- Экран теории -->
+        <div id="russian-theory-screen" class="screen">
+            <div class="theory-header">
+                <h2 id="theory-title">Теория</h2>
+            </div>
+            <div class="theory-content" id="theory-content">
+                <!-- Заполняется через JavaScript -->
+            </div>
+            <button id="theory-back-btn" class="btn btn-link">← Назад</button>
+        </div>
+
+        <!-- Экран карточек русского языка -->
+        <div id="russian-card-screen" class="screen">
+            <div class="progress-bar">
+                <div class="progress-fill" id="russian-progress-fill"></div>
+            </div>
+            <p class="progress-text"><span id="russian-current-card">1</span> / <span id="russian-total-cards">10</span></p>
+
+            <div class="card" id="russian-flashcard">
+                <div class="card-question" id="russian-card-question"></div>
+            </div>
+
+            <!-- Режим ввода текста -->
+            <div id="russian-text-input-mode" class="answer-section">
+                <input type="text" id="russian-text-answer" placeholder="Введите ответ..." autocomplete="off">
+                <button id="russian-check-text-btn" class="btn btn-primary">Проверить</button>
+            </div>
+
+            <!-- Режим выбора из вариантов -->
+            <div id="russian-choice-mode" class="answer-section hidden">
+                <div class="choices" id="russian-choices"></div>
+            </div>
+
+            <button id="russian-card-back-btn" class="btn btn-link">← Назад</button>
+        </div>
+
+        <!-- Экран результата (русский) -->
+        <div id="russian-result-screen" class="screen">
+            <div class="result-card" id="russian-result-card">
+                <div class="result-icon" id="russian-result-icon"></div>
+                <h2 id="russian-result-title"></h2>
+                <div class="result-details">
+                    <p>Ваш ответ:</p>
+                    <p class="user-answer" id="russian-user-answer"></p>
+                    <p>Правильный ответ:</p>
+                    <p class="correct-answer" id="russian-correct-answer"></p>
+                </div>
+            </div>
+
+            <div class="difficulty-section">
+                <p>Насколько это было сложно?</p>
+                <div class="difficulty-buttons" id="russian-diff-buttons">
+                    <button class="diff-btn" data-quality="1">Очень<br>сложно</button>
+                    <button class="diff-btn" data-quality="2">Сложно</button>
+                    <button class="diff-btn" data-quality="3">Нормально</button>
+                    <button class="diff-btn" data-quality="4">Легко</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Экран завершения (русский) -->
+        <div id="russian-complete-screen" class="screen">
+            <div class="complete-icon">🎉</div>
+            <h2>Отлично!</h2>
+            <p>Вы прошли все карточки</p>
+            <div class="session-stats">
+                <div class="session-stat">
+                    <span class="session-stat-value" id="russian-session-correct">0</span>
+                    <span class="session-stat-label">правильных</span>
+                </div>
+                <div class="session-stat">
+                    <span class="session-stat-value" id="russian-session-wrong">0</span>
+                    <span class="session-stat-label">ошибок</span>
+                </div>
+            </div>
+            <button id="russian-complete-btn" class="btn btn-primary">К заданию</button>
+        </div>
+
+        <!-- ===== ИНФОРМАТИКА ===== -->
+
+        <!-- Экран списка заданий информатики -->
+        <div id="cs-screen" class="screen">
+            <h1>Информатика</h1>
+            <p class="subtitle">Задания ЕГЭ</p>
+            <div class="tasks-list" id="cs-tasks-list">
+                <!-- Заполняется через JavaScript -->
+            </div>
+            <button id="cs-back-btn" class="btn btn-link">← Назад</button>
+        </div>
+
+        <!-- Экран теории информатики (напрямую открывается при выборе задания) -->
+        <div id="cs-task-screen" class="screen">
+            <div class="theory-header">
+                <h2 id="cs-task-title">Задание 1</h2>
+                <p class="subtitle" id="cs-task-subtitle">Анализ информационных моделей</p>
+            </div>
+            <div class="theory-content" id="cs-theory-content">
+                <!-- Заполняется через JavaScript -->
+            </div>
+            <button id="cs-task-back-btn" class="btn btn-link">← К списку заданий</button>
+        </div>
+
+        <!-- Экран Тригонометрии -->
+        <div id="home-screen" class="screen">
+            <h1>Тригонометрия</h1>
+            <p class="subtitle">Карточки для запоминания формул</p>
+
+            <div class="stats-box">
+                <div class="stat">
+                    <span class="stat-value" id="cards-today">0</span>
+                    <span class="stat-label">всего формул</span>
+                </div>
+                <div class="stat">
+                    <span class="stat-value" id="cards-learned">0</span>
+                    <span class="stat-label">изучено</span>
+                </div>
+            </div>
+
+            <div class="mode-selection">
+                <h3>Выберите режим:</h3>
+                <label class="mode-option">
+                    <input type="radio" name="mode" value="formula-to-name" checked>
+                    <span class="mode-label">
+                        <strong>Формула → Название</strong>
+                        <small>Увидите формулу, напишите название</small>
+                    </span>
+                </label>
+                <label class="mode-option">
+                    <input type="radio" name="mode" value="name-to-formula">
+                    <span class="mode-label">
+                        <strong>Название → Формула</strong>
+                        <small>Увидите название, выберите формулу</small>
+                    </span>
+                </label>
+            </div>
+
+            <button id="start-btn" class="btn btn-primary">Начать</button>
+            <button id="reset-btn" class="btn btn-secondary">Сбросить прогресс</button>
+
+            <!-- Кнопка просмотра формул -->
+            <button id="formulas-btn" class="btn btn-formulas">
+                <span class="formulas-btn-icon">📚</span>
+                <span class="formulas-btn-text">Все формулы</span>
+                <span class="formulas-btn-count" id="formulas-count">61</span>
+            </button>
+
+            <button id="trig-back-btn" class="btn btn-link">← Назад к Математике</button>
+        </div>
+
+        <!-- Экран просмотра всех формул -->
+        <div id="formulas-screen" class="screen">
+            <h2 id="formulas-title">Все формулы</h2>
+            <div class="formulas-content" id="formulas-content">
+                <!-- Заполняется через JavaScript -->
+            </div>
+            <button id="formulas-back-btn" class="btn btn-link">← Назад</button>
+        </div>
+
+        <!-- Экран карточки -->
+        <div id="card-screen" class="screen">
+            <div class="progress-bar">
+                <div class="progress-fill" id="progress-fill"></div>
+            </div>
+            <p class="progress-text"><span id="current-card">1</span> / <span id="total-cards">10</span></p>
+
+            <div class="card" id="flashcard">
+                <div class="card-question" id="card-question"></div>
+            </div>
+
+            <!-- Режим ввода текста -->
+            <div id="text-input-mode" class="answer-section">
+                <input type="text" id="text-answer" placeholder="Введите название формулы..." autocomplete="off">
+                <button id="check-text-btn" class="btn btn-primary">Проверить</button>
+            </div>
+
+            <!-- Режим выбора из вариантов -->
+            <div id="choice-mode" class="answer-section hidden">
+                <div class="choices" id="choices"></div>
+            </div>
+
+            <button id="back-btn" class="btn btn-link">← Назад</button>
+        </div>
+
+        <!-- Экран результата -->
+        <div id="result-screen" class="screen">
+            <div class="result-card" id="result-card">
+                <div class="result-icon" id="result-icon"></div>
+                <h2 id="result-title"></h2>
+                <div class="result-details">
+                    <p id="your-answer-label">Ваш ответ:</p>
+                    <p class="user-answer" id="user-answer"></p>
+                    <p id="correct-answer-label">Правильный ответ:</p>
+                    <p class="correct-answer" id="correct-answer"></p>
+                </div>
+            </div>
+
+            <div class="difficulty-section">
+                <p>Насколько это было сложно?</p>
+                <div class="difficulty-buttons">
+                    <button class="diff-btn" data-quality="1">Очень<br>сложно</button>
+                    <button class="diff-btn" data-quality="2">Сложно</button>
+                    <button class="diff-btn" data-quality="3">Нормально</button>
+                    <button class="diff-btn" data-quality="4">Легко</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Экран завершения -->
+        <div id="complete-screen" class="screen">
+            <div class="complete-icon">🎉</div>
+            <h2>Отлично!</h2>
+            <p>Вы завершили сегодняшнюю сессию</p>
+            <div class="session-stats">
+                <div class="session-stat">
+                    <span class="session-stat-value" id="session-correct">0</span>
+                    <span class="session-stat-label">правильных</span>
+                </div>
+                <div class="session-stat">
+                    <span class="session-stat-value" id="session-wrong">0</span>
+                    <span class="session-stat-label">ошибок</span>
+                </div>
+            </div>
+            <button id="home-btn" class="btn btn-primary">На главную</button>
+        </div>
+    </div>
+
+    <script src="js/cards.js"></script>
+    <script src="js/russian-data.js"></script>
+    <script src="js/cs-data.js"></script>
+    <script src="js/sm2.js"></script>
+    <script src="js/storage.js"></script>
+    <script src="js/decorations.js"></script>
+    <script src="js/app.js"></script>
+</body>
+</html>
