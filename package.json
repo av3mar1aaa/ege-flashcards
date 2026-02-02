@@ -1,0 +1,31 @@
+{
+  "name": "ege-flashcards",
+  "version": "1.0.0",
+  "description": "Интерактивные карточки для подготовки к ЕГЭ с алгоритмом SM-2 / Interactive flashcards for Russian EGE exam preparation",
+  "main": "index.html",
+  "scripts": {
+    "start": "npx serve .",
+    "dev": "npx live-server --port=3000"
+  },
+  "keywords": [
+    "ege",
+    "flashcards",
+    "education",
+    "russian",
+    "spaced-repetition",
+    "sm2",
+    "trigonometry",
+    "math",
+    "computer-science"
+  ],
+  "author": "ave",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/ave/ege-flashcards.git"
+  },
+  "homepage": "https://ave.github.io/ege-flashcards",
+  "bugs": {
+    "url": "https://github.com/ave/ege-flashcards/issues"
+  }
+}
