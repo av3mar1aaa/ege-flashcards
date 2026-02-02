@@ -69,6 +69,90 @@
             <button id="empty-back-btn" class="btn btn-link">← Назад</button>
         </div>
 
+        <!-- ===== АЛГЕБРА ===== -->
+
+        <!-- Экран Алгебры -->
+        <div id="algebra-screen" class="screen">
+            <h1>Алгебра</h1>
+            <p class="subtitle">Справочник формул</p>
+            <div class="sections-grid">
+                <div class="section-card" id="algebra-formulas-btn">
+                    <span class="section-icon">📐</span>
+                    <span class="section-title">Формулы</span>
+                </div>
+            </div>
+            <div class="algebra-stats">
+                <span class="algebra-stat-value" id="algebra-formulas-count">0</span>
+                <span class="algebra-stat-label">формул в справочнике</span>
+            </div>
+            <button id="algebra-back-btn" class="btn btn-link">← Назад к Математике</button>
+        </div>
+
+        <!-- Экран формул алгебры -->
+        <div id="algebra-formulas-screen" class="screen">
+            <h2>Формулы алгебры</h2>
+            <div class="algebra-formulas-nav" id="algebra-formulas-nav">
+                <!-- Навигация по разделам -->
+            </div>
+            <div class="formulas-content" id="algebra-formulas-content">
+                <!-- Заполняется через JavaScript -->
+            </div>
+            <button id="algebra-formulas-back-btn" class="btn btn-link">← Назад</button>
+        </div>
+
+        <!-- ===== ГЕОМЕТРИЯ ===== -->
+
+        <!-- Экран Геометрии -->
+        <div id="geometry-screen" class="screen">
+            <h1>Геометрия</h1>
+            <p class="subtitle">Справочник формул</p>
+            <div class="sections-grid">
+                <div class="section-card" id="planimetry-btn">
+                    <span class="section-icon">📐</span>
+                    <span class="section-title">Планиметрия</span>
+                </div>
+                <div class="section-card" id="stereometry-btn">
+                    <span class="section-icon">📦</span>
+                    <span class="section-title">Стереометрия</span>
+                </div>
+            </div>
+            <div class="geometry-stats">
+                <div class="geometry-stat">
+                    <span class="geometry-stat-value" id="planimetry-count">0</span>
+                    <span class="geometry-stat-label">планиметрия</span>
+                </div>
+                <div class="geometry-stat">
+                    <span class="geometry-stat-value" id="stereometry-count">0</span>
+                    <span class="geometry-stat-label">стереометрия</span>
+                </div>
+            </div>
+            <button id="geometry-back-btn" class="btn btn-link">← Назад к Математике</button>
+        </div>
+
+        <!-- Экран формул планиметрии -->
+        <div id="planimetry-screen" class="screen">
+            <h2>Планиметрия</h2>
+            <div class="geometry-formulas-nav" id="planimetry-nav">
+                <!-- Навигация по разделам -->
+            </div>
+            <div class="formulas-content" id="planimetry-content">
+                <!-- Заполняется через JavaScript -->
+            </div>
+            <button id="planimetry-back-btn" class="btn btn-link">← Назад</button>
+        </div>
+
+        <!-- Экран формул стереометрии -->
+        <div id="stereometry-screen" class="screen">
+            <h2>Стереометрия</h2>
+            <div class="geometry-formulas-nav" id="stereometry-nav">
+                <!-- Навигация по разделам -->
+            </div>
+            <div class="formulas-content" id="stereometry-content">
+                <!-- Заполняется через JavaScript -->
+            </div>
+            <button id="stereometry-back-btn" class="btn btn-link">← Назад</button>
+        </div>
+
         <!-- ===== РУССКИЙ ЯЗЫК ===== -->
 
         <!-- Экран выбора подраздела русского языка -->
@@ -377,6 +461,8 @@
     </div>
 
     <script src="js/cards.js"></script>
+    <script src="js/algebra-data.js"></script>
+    <script src="js/geometry-data.js"></script>
     <script src="js/russian-data.js"></script>
     <script src="js/cs-data.js"></script>
     <script src="js/sm2.js"></script>

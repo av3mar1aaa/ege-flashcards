@@ -69,7 +69,14 @@ const App = {
             literatureWork: document.getElementById('literature-work-screen'),
             // Информатика
             cs: document.getElementById('cs-screen'),
-            csTask: document.getElementById('cs-task-screen')
+            csTask: document.getElementById('cs-task-screen'),
+            // Алгебра
+            algebra: document.getElementById('algebra-screen'),
+            algebraFormulas: document.getElementById('algebra-formulas-screen'),
+            // Геометрия
+            geometry: document.getElementById('geometry-screen'),
+            planimetry: document.getElementById('planimetry-screen'),
+            stereometry: document.getElementById('stereometry-screen')
         };
 
         this.elements = {
@@ -168,7 +175,28 @@ const App = {
             csTaskTitle: document.getElementById('cs-task-title'),
             csTaskSubtitle: document.getElementById('cs-task-subtitle'),
             csTaskBackBtn: document.getElementById('cs-task-back-btn'),
-            csTheoryContent: document.getElementById('cs-theory-content')
+            csTheoryContent: document.getElementById('cs-theory-content'),
+
+            // Алгебра
+            algebraFormulasBtn: document.getElementById('algebra-formulas-btn'),
+            algebraFormulasCount: document.getElementById('algebra-formulas-count'),
+            algebraBackBtn: document.getElementById('algebra-back-btn'),
+            algebraFormulasNav: document.getElementById('algebra-formulas-nav'),
+            algebraFormulasContent: document.getElementById('algebra-formulas-content'),
+            algebraFormulasBackBtn: document.getElementById('algebra-formulas-back-btn'),
+
+            // Геометрия
+            planimetryBtn: document.getElementById('planimetry-btn'),
+            stereometryBtn: document.getElementById('stereometry-btn'),
+            planimetryCount: document.getElementById('planimetry-count'),
+            stereometryCount: document.getElementById('stereometry-count'),
+            geometryBackBtn: document.getElementById('geometry-back-btn'),
+            planimetryNav: document.getElementById('planimetry-nav'),
+            planimetryContent: document.getElementById('planimetry-content'),
+            planimetryBackBtn: document.getElementById('planimetry-back-btn'),
+            stereometryNav: document.getElementById('stereometry-nav'),
+            stereometryContent: document.getElementById('stereometry-content'),
+            stereometryBackBtn: document.getElementById('stereometry-back-btn')
         };
     },
 
@@ -195,9 +223,9 @@ const App = {
                 if (subsection === 'trig') {
                     this.showScreen('home');
                 } else if (subsection === 'algebra') {
-                    this.showEmptyScreen('Алгебра', 'math', 'algebra');
-                } else {
-                    this.showEmptyScreen('Геометрия', 'math', 'geometry');
+                    this.showAlgebraScreen();
+                } else if (subsection === 'geometry') {
+                    this.showGeometryScreen();
                 }
             });
         });
@@ -214,6 +242,18 @@ const App = {
         this.elements.homeBtn.addEventListener('click', () => this.goHome());
         this.elements.formulasBtn.addEventListener('click', () => this.showAllFormulas());
         this.elements.formulasBackBtn.addEventListener('click', () => this.goHome());
+
+        // Экран Алгебры
+        this.elements.algebraBackBtn.addEventListener('click', () => this.showScreen('math'));
+        this.elements.algebraFormulasBtn.addEventListener('click', () => this.showAlgebraFormulas());
+        this.elements.algebraFormulasBackBtn.addEventListener('click', () => this.showAlgebraScreen());
+
+        // Экран Геометрии
+        this.elements.geometryBackBtn.addEventListener('click', () => this.showScreen('math'));
+        this.elements.planimetryBtn.addEventListener('click', () => this.showPlanimetryFormulas());
+        this.elements.stereometryBtn.addEventListener('click', () => this.showStereometryFormulas());
+        this.elements.planimetryBackBtn.addEventListener('click', () => this.showGeometryScreen());
+        this.elements.stereometryBackBtn.addEventListener('click', () => this.showGeometryScreen());
 
         // Выбор режима
         document.querySelectorAll('input[name="mode"]').forEach(radio => {
@@ -861,6 +901,190 @@ const App = {
     bindCSEvents() {
         this.elements.csBackBtn.addEventListener('click', () => this.showScreen('main'));
         this.elements.csTaskBackBtn.addEventListener('click', () => this.showCSTasks());
+    },
+
+    // ===== АЛГЕБРА =====
+
+    // Показать экран алгебры
+    showAlgebraScreen() {
+        // Обновить количество формул
+        if (typeof getAlgebraFormulasCount === 'function') {
+            this.elements.algebraFormulasCount.textContent = getAlgebraFormulasCount();
+        }
+        this.showScreen('algebra', 'algebra');
+    },
+
+    // Показать все формулы алгебры
+    showAlgebraFormulas(scrollToSection = null) {
+        // Создаём навигацию по разделам
+        let navHtml = '<div class="algebra-nav-pills">';
+        for (const [key, section] of Object.entries(ALGEBRA_FORMULAS)) {
+            navHtml += `<button class="algebra-nav-pill" data-section="${key}">${section.title}</button>`;
+        }
+        navHtml += '</div>';
+        this.elements.algebraFormulasNav.innerHTML = navHtml;
+
+        // Привязываем клики по навигации
+        document.querySelectorAll('.algebra-nav-pill').forEach(pill => {
+            pill.addEventListener('click', () => {
+                const sectionKey = pill.dataset.section;
+                const sectionEl = document.getElementById(`algebra-section-${sectionKey}`);
+                if (sectionEl) {
+                    sectionEl.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                }
+            });
+        });
+
+        // Создаём контент с формулами
+        let html = '';
+        for (const [key, section] of Object.entries(ALGEBRA_FORMULAS)) {
+            html += `<div class="formulas-category" id="algebra-section-${key}">
+                <div class="formulas-category-title">${section.title}</div>
+                <div class="formulas-category-list">`;
+
+            section.formulas.forEach(formula => {
+                html += `<div class="formula-item">
+                    <div class="formula-name">${formula.name}</div>
+                    <div class="formula-math">$$${formula.formula}$$</div>
+                </div>`;
+            });
+
+            html += '</div></div>';
+        }
+
+        this.elements.algebraFormulasContent.innerHTML = html;
+        this.showScreen('algebraFormulas', 'algebra');
+        this.renderMath();
+
+        // Прокрутка к нужному разделу
+        if (scrollToSection) {
+            setTimeout(() => {
+                const sectionEl = document.getElementById(`algebra-section-${scrollToSection}`);
+                if (sectionEl) {
+                    sectionEl.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                }
+            }, 100);
+        }
+    },
+
+    // ===== ГЕОМЕТРИЯ =====
+
+    // Показать экран геометрии
+    showGeometryScreen() {
+        // Обновить количество формул
+        if (typeof getPlanimetryFormulasCount === 'function') {
+            this.elements.planimetryCount.textContent = getPlanimetryFormulasCount();
+        }
+        if (typeof getStereometryFormulasCount === 'function') {
+            this.elements.stereometryCount.textContent = getStereometryFormulasCount();
+        }
+        this.showScreen('geometry', 'geometry');
+    },
+
+    // Показать формулы планиметрии
+    showPlanimetryFormulas(scrollToSection = null) {
+        // Создаём навигацию по разделам
+        let navHtml = '<div class="geometry-nav-pills">';
+        for (const [key, section] of Object.entries(PLANIMETRY_FORMULAS)) {
+            navHtml += `<button class="geometry-nav-pill" data-section="${key}">${section.title}</button>`;
+        }
+        navHtml += '</div>';
+        this.elements.planimetryNav.innerHTML = navHtml;
+
+        // Привязываем клики по навигации
+        document.querySelectorAll('#planimetry-nav .geometry-nav-pill').forEach(pill => {
+            pill.addEventListener('click', () => {
+                const sectionKey = pill.dataset.section;
+                const sectionEl = document.getElementById(`planimetry-section-${sectionKey}`);
+                if (sectionEl) {
+                    sectionEl.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                }
+            });
+        });
+
+        // Создаём контент с формулами
+        let html = '';
+        for (const [key, section] of Object.entries(PLANIMETRY_FORMULAS)) {
+            html += `<div class="formulas-category" id="planimetry-section-${key}">
+                <div class="formulas-category-title">${section.title}</div>
+                <div class="formulas-category-list">`;
+
+            section.formulas.forEach(formula => {
+                html += `<div class="formula-item">
+                    <div class="formula-name">${formula.name}</div>
+                    <div class="formula-math">$$${formula.formula}$$</div>
+                </div>`;
+            });
+
+            html += '</div></div>';
+        }
+
+        this.elements.planimetryContent.innerHTML = html;
+        this.showScreen('planimetry', 'geometry');
+        this.renderMath();
+
+        // Прокрутка к нужному разделу
+        if (scrollToSection) {
+            setTimeout(() => {
+                const sectionEl = document.getElementById(`planimetry-section-${scrollToSection}`);
+                if (sectionEl) {
+                    sectionEl.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                }
+            }, 100);
+        }
+    },
+
+    // Показать формулы стереометрии
+    showStereometryFormulas(scrollToSection = null) {
+        // Создаём навигацию по разделам
+        let navHtml = '<div class="geometry-nav-pills">';
+        for (const [key, section] of Object.entries(STEREOMETRY_FORMULAS)) {
+            navHtml += `<button class="geometry-nav-pill" data-section="${key}">${section.title}</button>`;
+        }
+        navHtml += '</div>';
+        this.elements.stereometryNav.innerHTML = navHtml;
+
+        // Привязываем клики по навигации
+        document.querySelectorAll('#stereometry-nav .geometry-nav-pill').forEach(pill => {
+            pill.addEventListener('click', () => {
+                const sectionKey = pill.dataset.section;
+                const sectionEl = document.getElementById(`stereometry-section-${sectionKey}`);
+                if (sectionEl) {
+                    sectionEl.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                }
+            });
+        });
+
+        // Создаём контент с формулами
+        let html = '';
+        for (const [key, section] of Object.entries(STEREOMETRY_FORMULAS)) {
+            html += `<div class="formulas-category" id="stereometry-section-${key}">
+                <div class="formulas-category-title">${section.title}</div>
+                <div class="formulas-category-list">`;
+
+            section.formulas.forEach(formula => {
+                html += `<div class="formula-item">
+                    <div class="formula-name">${formula.name}</div>
+                    <div class="formula-math">$$${formula.formula}$$</div>
+                </div>`;
+            });
+
+            html += '</div></div>';
+        }
+
+        this.elements.stereometryContent.innerHTML = html;
+        this.showScreen('stereometry', 'geometry');
+        this.renderMath();
+
+        // Прокрутка к нужному разделу
+        if (scrollToSection) {
+            setTimeout(() => {
+                const sectionEl = document.getElementById(`stereometry-section-${scrollToSection}`);
+                if (sectionEl) {
+                    sectionEl.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                }
+            }, 100);
+        }
     }
 };
 
