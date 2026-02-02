@@ -64,9 +64,9 @@ const App = {
             russianCard: document.getElementById('russian-card-screen'),
             russianResult: document.getElementById('russian-result-screen'),
             russianComplete: document.getElementById('russian-complete-screen'),
-            // РУСТЬЮТОРС
-            rustutors: document.getElementById('rustutors-screen'),
-            rustutorsTask: document.getElementById('rustutors-task-screen'),
+            // Литература для сочинений
+            literature: document.getElementById('literature-screen'),
+            literatureWork: document.getElementById('literature-work-screen'),
             // Информатика
             cs: document.getElementById('cs-screen'),
             csTask: document.getElementById('cs-task-screen')
@@ -120,17 +120,18 @@ const App = {
 
             // Русский язык
             russianEgeBtn: document.getElementById('russian-ege-btn'),
-            russianRustutorsBtn: document.getElementById('russian-rustutors-btn'),
+            russianLiteratureBtn: document.getElementById('russian-literature-btn'),
             russianTasksList: document.getElementById('russian-tasks-list'),
             russianBackBtn: document.getElementById('russian-back-btn'),
             russianEgeBackBtn: document.getElementById('russian-ege-back-btn'),
-            // РУСТЬЮТОРС
-            rustutorsTasksList: document.getElementById('rustutors-tasks-list'),
-            rustutorsBackBtn: document.getElementById('rustutors-back-btn'),
-            rustutorsTaskTitle: document.getElementById('rustutors-task-title'),
-            rustutorsTaskSubtitle: document.getElementById('rustutors-task-subtitle'),
-            rustutorsContent: document.getElementById('rustutors-content'),
-            rustutorsTaskBackBtn: document.getElementById('rustutors-task-back-btn'),
+            // Литература для сочинений
+            literatureList: document.getElementById('literature-list'),
+            literatureBackBtn: document.getElementById('literature-back-btn'),
+            literatureWorkTitle: document.getElementById('literature-work-title'),
+            literatureWorkAuthor: document.getElementById('literature-work-author'),
+            literatureThemes: document.getElementById('literature-themes'),
+            literatureContent: document.getElementById('literature-content'),
+            literatureWorkBackBtn: document.getElementById('literature-work-back-btn'),
             russianTaskTitle: document.getElementById('russian-task-title'),
             russianTaskSubtitle: document.getElementById('russian-task-subtitle'),
             russianCardsTotal: document.getElementById('russian-cards-total'),
@@ -730,7 +731,7 @@ const App = {
         // Навигация русского языка
         this.elements.russianBackBtn.addEventListener('click', () => this.showScreen('main'));
         this.elements.russianEgeBtn.addEventListener('click', () => this.showRussianTasks());
-        this.elements.russianRustutorsBtn.addEventListener('click', () => this.showRustutorsTasks());
+        this.elements.russianLiteratureBtn.addEventListener('click', () => this.showLiteratureList());
         this.elements.russianEgeBackBtn.addEventListener('click', () => this.showScreen('russian'));
 
         // Навигация заданий ЕГЭ
@@ -741,9 +742,9 @@ const App = {
         this.elements.russianCardBackBtn.addEventListener('click', () => this.openRussianTask(this.currentRussianTask.id));
         this.elements.russianCompleteBtn.addEventListener('click', () => this.openRussianTask(this.currentRussianTask.id));
 
-        // РУСТЬЮТОРС навигация
-        this.elements.rustutorsBackBtn.addEventListener('click', () => this.showScreen('russian'));
-        this.elements.rustutorsTaskBackBtn.addEventListener('click', () => this.showRustutorsTasks());
+        // Литература для сочинений — навигация
+        this.elements.literatureBackBtn.addEventListener('click', () => this.showScreen('russian'));
+        this.elements.literatureWorkBackBtn.addEventListener('click', () => this.showLiteratureList());
 
         // Кнопки сложности для русского
         this.elements.russianDiffButtons.querySelectorAll('.diff-btn').forEach(btn => {
@@ -754,46 +755,65 @@ const App = {
         });
     },
 
-    // ===== РУСТЬЮТОРС =====
+    // ===== ЛИТЕРАТУРА ДЛЯ СОЧИНЕНИЙ =====
 
-    currentRustutorsTask: null,
+    currentLiteratureWork: null,
 
-    // Показать список заданий РУСТЬЮТОРС
-    showRustutorsTasks() {
+    // Показать список произведений
+    showLiteratureList() {
         let html = '';
-        RUSTUTORS_DATA.forEach(task => {
+        LITERATURE_DATA.forEach(work => {
             html += `
-                <div class="task-item" data-rustutors-task-id="${task.id}">
-                    <span class="task-number">${task.id}</span>
-                    <span class="task-title">${task.title}</span>
+                <div class="task-item literature-item" data-literature-id="${work.id}">
+                    <span class="task-number">${work.id}</span>
+                    <div class="literature-info">
+                        <span class="task-title">${work.title}</span>
+                        <span class="literature-author">${work.author}</span>
+                    </div>
                 </div>
             `;
         });
-        this.elements.rustutorsTasksList.innerHTML = html;
+        this.elements.literatureList.innerHTML = html;
 
-        // Привязать клики по заданиям
-        document.querySelectorAll('[data-rustutors-task-id]').forEach(item => {
+        // Привязать клики по произведениям
+        document.querySelectorAll('[data-literature-id]').forEach(item => {
             item.addEventListener('click', () => {
-                const taskId = parseInt(item.dataset.rustutorsTaskId);
-                this.openRustutorsTask(taskId);
+                const workId = parseInt(item.dataset.literatureId);
+                this.openLiteratureWork(workId);
             });
         });
 
-        this.showScreen('rustutors');
+        this.showScreen('literature');
     },
 
-    // Открыть задание РУСТЬЮТОРС
-    openRustutorsTask(taskId) {
-        const task = getRustutorsTask(taskId);
-        if (!task) return;
+    // Открыть произведение
+    openLiteratureWork(workId) {
+        const work = getLiteratureWork(workId);
+        if (!work) return;
 
-        this.currentRustutorsTask = task;
+        this.currentLiteratureWork = work;
 
-        this.elements.rustutorsTaskTitle.textContent = task.title;
-        this.elements.rustutorsTaskSubtitle.textContent = task.subtitle;
-        this.elements.rustutorsContent.innerHTML = task.content;
+        this.elements.literatureWorkTitle.textContent = work.title;
+        this.elements.literatureWorkAuthor.textContent = `${work.author}, ${work.year}`;
 
-        this.showScreen('rustutorsTask');
+        // Показать темы
+        const themesHtml = work.themes.map(theme =>
+            `<span class="theme-tag">${theme}</span>`
+        ).join('');
+        this.elements.literatureThemes.innerHTML = `<div class="themes-container">${themesHtml}</div>`;
+
+        // Показать контент (пока пусто)
+        if (work.content) {
+            this.elements.literatureContent.innerHTML = work.content;
+        } else {
+            this.elements.literatureContent.innerHTML = `
+                <div class="empty-content">
+                    <p class="subtitle">Содержание будет добавлено позже</p>
+                </div>
+            `;
+        }
+
+        this.showScreen('literatureWork');
     },
 
     // ===== ИНФОРМАТИКА =====

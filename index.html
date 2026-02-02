@@ -80,9 +80,9 @@
                     <span class="section-icon">📝</span>
                     <span class="section-title">Задания ЕГЭ</span>
                 </div>
-                <div class="section-card" id="russian-rustutors-btn">
+                <div class="section-card" id="russian-literature-btn">
                     <span class="section-icon">📚</span>
-                    <span class="section-title">РУСТЬЮТОРС</span>
+                    <span class="section-title">Литература</span>
                 </div>
             </div>
             <button id="russian-back-btn" class="btn btn-link">← Назад</button>
@@ -98,26 +98,29 @@
             <button id="russian-ege-back-btn" class="btn btn-link">← Назад</button>
         </div>
 
-        <!-- Экран списка заданий РУСТЬЮТОРС -->
-        <div id="rustutors-screen" class="screen">
-            <h1>РУСТЬЮТОРС</h1>
-            <p class="subtitle">Полная теория с rustutors.ru</p>
-            <div class="tasks-list" id="rustutors-tasks-list">
+        <!-- Экран списка произведений для сочинений -->
+        <div id="literature-screen" class="screen">
+            <h1>Литература для сочинений</h1>
+            <p class="subtitle">30 произведений для аргументации</p>
+            <div class="tasks-list" id="literature-list">
                 <!-- Заполняется через JavaScript -->
             </div>
-            <button id="rustutors-back-btn" class="btn btn-link">← Назад</button>
+            <button id="literature-back-btn" class="btn btn-link">← Назад</button>
         </div>
 
-        <!-- Экран просмотра задания РУСТЬЮТОРС -->
-        <div id="rustutors-task-screen" class="screen">
+        <!-- Экран просмотра произведения -->
+        <div id="literature-work-screen" class="screen">
             <div class="theory-header">
-                <h2 id="rustutors-task-title">Задание 1</h2>
-                <p class="subtitle" id="rustutors-task-subtitle">РУСТЬЮТОРС</p>
+                <h2 id="literature-work-title">Название произведения</h2>
+                <p class="subtitle" id="literature-work-author">Автор</p>
             </div>
-            <div class="rustutors-content" id="rustutors-content">
-                <!-- Заполняется через JavaScript -->
+            <div class="literature-themes" id="literature-themes">
+                <!-- Темы для сочинений -->
             </div>
-            <button id="rustutors-task-back-btn" class="btn btn-link">← К списку</button>
+            <div class="literature-content" id="literature-content">
+                <!-- Контент произведения -->
+            </div>
+            <button id="literature-work-back-btn" class="btn btn-link">← К списку</button>
         </div>
 
         <!-- Экран выбора: Теория / Правила -->
