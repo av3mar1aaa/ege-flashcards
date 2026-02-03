@@ -3,7 +3,7 @@
  * Кэширует ресурсы для офлайн-доступа
  */
 
-const CACHE_NAME = 'ege-trainer-v2';
+const CACHE_NAME = 'ege-trainer-v3';
 const ASSETS = [
     './',
     './index.html',

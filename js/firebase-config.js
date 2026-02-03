@@ -13,12 +13,12 @@
  */
 
 const FIREBASE_CONFIG = {
-    apiKey: "YOUR_API_KEY",
-    authDomain: "YOUR_PROJECT.firebaseapp.com",
-    projectId: "YOUR_PROJECT_ID",
-    storageBucket: "YOUR_PROJECT.appspot.com",
-    messagingSenderId: "YOUR_SENDER_ID",
-    appId: "YOUR_APP_ID"
+    apiKey: "AIzaSyDrx6MQQAEEMzm7LaHpLj9c4nIsC39NHnU",
+    authDomain: "ege-ave.firebaseapp.com",
+    projectId: "ege-ave",
+    storageBucket: "ege-ave.firebasestorage.app",
+    messagingSenderId: "424888407072",
+    appId: "1:424888407072:web:4f43480047bf029279d845"
 };
 
 /**
