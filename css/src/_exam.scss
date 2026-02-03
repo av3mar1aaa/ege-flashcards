@@ -1,0 +1,251 @@
+/* ===== ЭКЗАМЕН (МИНИ-ПРАКТИКА) ===== */
+
+.exam-setup-card {
+    background: var(--card-bg);
+    border-radius: 16px;
+    padding: 24px;
+    margin: 24px 0;
+    box-shadow: 0 4px 12px var(--shadow-light);
+}
+
+.exam-setup-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 14px 0;
+    border-bottom: 1px solid var(--border);
+}
+
+.exam-setup-row:last-child {
+    border-bottom: none;
+}
+
+.exam-setup-row label {
+    font-weight: 600;
+    color: var(--text);
+}
+
+.exam-header {
+    margin-bottom: 20px;
+}
+
+.exam-timer-bar {
+    height: 4px;
+    background: var(--border);
+    border-radius: 2px;
+    overflow: hidden;
+    margin-bottom: 10px;
+}
+
+.exam-timer-progress {
+    height: 100%;
+    background: var(--primary);
+    transition: width 1s linear;
+    border-radius: 2px;
+}
+
+.exam-info {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.exam-timer {
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: var(--primary);
+    font-family: 'Courier New', monospace;
+}
+
+.exam-timer-warning {
+    color: var(--error) !important;
+    animation: pulse 1s ease-in-out infinite;
+}
+
+@keyframes pulse {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.5; }
+}
+
+.exam-progress-text {
+    font-size: 0.9rem;
+    color: var(--text-secondary);
+    font-weight: 600;
+}
+
+.exam-card {
+    min-height: 150px;
+}
+
+.exam-nav {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 16px;
+}
+
+.exam-nav .btn {
+    flex: 1;
+}
+
+.exam-question-map {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+    justify-content: center;
+    margin-bottom: 16px;
+}
+
+.exam-q-dot {
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    border: 2px solid var(--border);
+    background: var(--card-bg);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 0.75rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s;
+    color: var(--text-secondary);
+}
+
+.exam-q-dot:hover {
+    border-color: var(--primary);
+}
+
+.exam-q-dot.current {
+    border-color: var(--primary);
+    background: var(--primary);
+    color: white;
+}
+
+.exam-q-dot.answered {
+    border-color: var(--success);
+    background: var(--success-light);
+    color: var(--success);
+}
+
+/* Результат экзамена */
+.exam-result-header {
+    text-align: center;
+    margin: 30px 0 20px;
+}
+
+.exam-result-grade {
+    width: 80px;
+    height: 80px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 2.5rem;
+    font-weight: 700;
+    margin: 0 auto 12px;
+    color: white;
+    background: var(--primary);
+}
+
+.exam-result-header h2 {
+    font-size: 1.5rem;
+}
+
+.exam-result-stats {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 10px;
+    margin: 20px 0;
+}
+
+.exam-result-stat {
+    background: var(--card-bg);
+    border-radius: 12px;
+    padding: 14px 8px;
+    text-align: center;
+    box-shadow: 0 2px 6px var(--shadow-light);
+}
+
+.exam-result-stat-value {
+    display: block;
+    font-size: 1.4rem;
+    font-weight: 700;
+    color: var(--primary);
+}
+
+.exam-correct-val {
+    color: var(--success) !important;
+}
+
+.exam-wrong-val {
+    color: var(--error) !important;
+}
+
+.exam-result-stat-label {
+    font-size: 0.7rem;
+    color: var(--text-secondary);
+}
+
+.exam-weak-topics {
+    background: var(--card-bg);
+    border-radius: 14px;
+    padding: 16px;
+    margin-bottom: 20px;
+    box-shadow: 0 2px 6px var(--shadow-light);
+}
+
+.exam-weak-topic {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px 0;
+    border-bottom: 1px solid var(--border);
+    gap: 10px;
+}
+
+.exam-weak-topic:last-child {
+    border-bottom: none;
+}
+
+.exam-weak-name {
+    font-weight: 600;
+    font-size: 0.9rem;
+    color: var(--text);
+    flex: 1;
+}
+
+.exam-weak-bar {
+    width: 80px;
+    height: 8px;
+    background: var(--border);
+    border-radius: 4px;
+    overflow: hidden;
+    flex-shrink: 0;
+}
+
+.exam-weak-fill {
+    height: 100%;
+    border-radius: 4px;
+    transition: width 0.5s ease;
+}
+
+.exam-weak-percent {
+    font-size: 0.85rem;
+    font-weight: 600;
+    min-width: 40px;
+    text-align: right;
+    flex-shrink: 0;
+}
+
+@media (max-width: 480px) {
+    .exam-result-stats {
+        grid-template-columns: repeat(2, 1fr);
+    }
+
+    .exam-q-dot {
+        width: 28px;
+        height: 28px;
+        font-size: 0.7rem;
+    }
+}
+

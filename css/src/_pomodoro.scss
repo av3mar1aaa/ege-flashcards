@@ -1,0 +1,140 @@
+
+/* ================================================================
+   ТАЙМЕР ПОМОДОРО
+   ================================================================ */
+
+.pomo-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 20px;
+    padding: 10px 0;
+}
+
+.pomo-mode-label {
+    font-size: 1.1rem;
+    font-weight: 700;
+    color: var(--primary);
+    text-transform: uppercase;
+    letter-spacing: 2px;
+}
+
+.pomo-mode-label.break {
+    color: var(--success);
+}
+
+.pomo-timer-visual {
+    position: relative;
+    width: 200px;
+    height: 200px;
+}
+
+.pomo-circle {
+    width: 200px;
+    height: 200px;
+    transform: rotate(-90deg);
+}
+
+.pomo-circle-bg {
+    fill: none;
+    stroke: var(--border);
+    stroke-width: 8;
+}
+
+.pomo-circle-progress {
+    fill: none;
+    stroke: var(--primary);
+    stroke-width: 8;
+    stroke-linecap: round;
+    stroke-dasharray: 565.48;
+    stroke-dashoffset: 0;
+    transition: stroke-dashoffset 1s linear;
+}
+
+.pomo-circle-progress.break {
+    stroke: var(--success);
+}
+
+.pomo-time-display {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    font-size: 2.5rem;
+    font-weight: 700;
+    color: var(--text);
+    font-variant-numeric: tabular-nums;
+}
+
+.pomo-controls {
+    display: flex;
+    gap: 12px;
+}
+
+.pomo-ctrl-btn {
+    padding: 12px 28px;
+    border: 2px solid var(--primary);
+    border-radius: 12px;
+    background: transparent;
+    color: var(--primary);
+    font-weight: 700;
+    font-size: 1rem;
+    cursor: pointer;
+    transition: all 0.2s;
+}
+
+.pomo-ctrl-btn:hover {
+    background: var(--primary);
+    color: white;
+}
+
+.pomo-ctrl-btn.primary {
+    background: var(--primary);
+    color: white;
+}
+
+.pomo-ctrl-btn.primary:hover {
+    background: var(--primary-dark);
+    border-color: var(--primary-dark);
+}
+
+.pomo-settings {
+    display: flex;
+    gap: 16px;
+}
+
+.pomo-setting label {
+    font-size: 0.85rem;
+    color: var(--text-secondary);
+    display: block;
+    margin-bottom: 4px;
+}
+
+.pomo-setting input {
+    width: 70px;
+    padding: 8px 10px;
+    border: 2px solid var(--border);
+    border-radius: 8px;
+    font-size: 1rem;
+    text-align: center;
+    background: var(--bg);
+    color: var(--text);
+    transition: border-color 0.2s;
+}
+
+.pomo-setting input:focus {
+    outline: none;
+    border-color: var(--primary);
+}
+
+.pomo-sessions {
+    font-size: 0.95rem;
+    color: var(--text-secondary);
+}
+
+.pomo-sessions-count {
+    font-weight: 700;
+    color: var(--primary);
+    font-size: 1.2rem;
+}
+

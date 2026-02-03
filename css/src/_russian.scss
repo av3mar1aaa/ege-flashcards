@@ -1,0 +1,247 @@
+/* ===== РУССКИЙ ЯЗЫК ===== */
+
+/* Список заданий ЕГЭ */
+.tasks-list {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    margin: 20px 0;
+    max-height: 65vh;
+    overflow-y: auto;
+}
+
+.task-item {
+    background: var(--card-bg);
+    border-radius: 12px;
+    padding: 15px 20px;
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    cursor: pointer;
+    transition: all 0.2s;
+    box-shadow: 0 2px 4px var(--shadow-light);
+    border: 2px solid transparent;
+}
+
+.task-item:hover {
+    border-color: var(--primary);
+    transform: translateX(5px);
+}
+
+.task-number {
+    background: var(--primary);
+    color: white;
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 700;
+    font-size: 0.9rem;
+    flex-shrink: 0;
+}
+
+.task-title {
+    flex: 1;
+    font-size: 0.95rem;
+    line-height: 1.4;
+}
+
+.task-cards-count {
+    font-size: 0.8rem;
+    color: var(--text-secondary);
+    white-space: nowrap;
+}
+
+/* Статистика задания */
+.task-stats {
+    display: flex;
+    gap: 20px;
+    justify-content: center;
+    margin: 20px 0;
+}
+
+/* Теория */
+.theory-header {
+    margin-bottom: 20px;
+}
+
+.theory-header h2 {
+    color: var(--primary);
+    font-size: 1.3rem;
+    text-align: center;
+}
+
+.theory-content {
+    background: var(--card-bg);
+    border-radius: 16px;
+    padding: 25px;
+    box-shadow: 0 4px 6px -1px var(--shadow);
+    margin-bottom: 20px;
+    max-height: 65vh;
+    overflow-y: auto;
+}
+
+.theory-content h3 {
+    color: var(--primary);
+    font-size: 1.1rem;
+    margin: 20px 0 10px 0;
+    padding-bottom: 8px;
+    border-bottom: 2px solid var(--border);
+}
+
+.theory-content h3:first-child {
+    margin-top: 0;
+}
+
+.theory-content p {
+    margin-bottom: 15px;
+    line-height: 1.7;
+}
+
+.theory-content ul, .theory-content ol {
+    margin: 15px 0;
+    padding-left: 25px;
+}
+
+.theory-content li {
+    margin-bottom: 8px;
+    line-height: 1.6;
+}
+
+/* Таблицы в теории */
+.theory-content table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 20px 0;
+    font-size: 0.9rem;
+}
+
+.theory-content th, .theory-content td {
+    padding: 12px 15px;
+    text-align: left;
+    border: 1px solid var(--border);
+}
+
+.theory-content th {
+    background: var(--primary);
+    color: white;
+    font-weight: 600;
+}
+
+.theory-content tr:nth-child(even) {
+    background: var(--bg);
+}
+
+/* Выделения в теории */
+.theory-content .example {
+    background: var(--primary-light-2);
+    padding: 15px;
+    border-radius: 8px;
+    margin: 15px 0;
+    border-left: 4px solid var(--primary);
+}
+
+.theory-content .warning {
+    background: var(--error-light);
+    padding: 15px;
+    border-radius: 8px;
+    margin: 15px 0;
+    border-left: 4px solid var(--error);
+}
+
+.theory-content .note {
+    background: var(--success-light);
+    padding: 15px;
+    border-radius: 8px;
+    margin: 15px 0;
+    border-left: 4px solid var(--success);
+}
+
+.theory-content .highlight {
+    background: var(--primary-light-3);
+    padding: 2px 6px;
+    border-radius: 4px;
+}
+
+.theory-content .stress {
+    color: var(--error);
+    font-weight: 700;
+    text-transform: uppercase;
+}
+
+/* Карточки правил */
+.rule-text {
+    font-size: 1.2rem;
+    font-weight: 600;
+    text-align: center;
+    margin-bottom: 10px;
+}
+
+.rule-type {
+    font-size: 0.85rem;
+    color: var(--text-secondary);
+    text-align: center;
+    font-style: italic;
+}
+
+.theory-loading {
+    text-align: center;
+    color: var(--text-secondary);
+    padding: 40px;
+}
+
+/* Адаптивность */
+@media (max-width: 480px) {
+    .container {
+        padding: 15px;
+    }
+
+    h1 {
+        font-size: 2rem;
+    }
+
+    .stats-box {
+        flex-direction: column;
+        gap: 10px;
+    }
+
+    .stat {
+        padding: 15px;
+    }
+
+    .card {
+        padding: 30px 20px;
+        min-height: 150px;
+    }
+
+    .card-question {
+        font-size: 1.2rem;
+    }
+
+    .katex {
+        font-size: 1.1em;
+    }
+
+    .difficulty-buttons {
+        flex-wrap: wrap;
+    }
+
+    .diff-btn {
+        flex: 1 1 45%;
+    }
+
+    .section-card {
+        padding: 20px 15px;
+    }
+
+    .section-icon {
+        font-size: 2rem;
+    }
+
+    .section-title {
+        font-size: 1.1rem;
+    }
+}
+

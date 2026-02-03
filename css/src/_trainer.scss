@@ -1,0 +1,155 @@
+/* ===== ТРЕНАЖЁР ===== */
+
+.trainer-score {
+    display: flex;
+    gap: 16px;
+    justify-content: center;
+    margin-bottom: 10px;
+}
+
+.trainer-score-item {
+    font-size: 0.9rem;
+    font-weight: 600;
+    padding: 6px 16px;
+    border-radius: 20px;
+}
+
+.trainer-correct {
+    background: var(--success-light);
+    color: var(--success);
+}
+
+.trainer-wrong {
+    background: var(--error-light);
+    color: var(--error);
+}
+
+.trainer-problem-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 12px;
+}
+
+.trainer-category-badge {
+    background: linear-gradient(135deg, var(--primary), var(--primary-accent));
+    color: white;
+    padding: 6px 14px;
+    border-radius: 20px;
+    font-size: 0.85rem;
+    font-weight: 600;
+}
+
+.trainer-score-mini {
+    font-size: 0.9rem;
+    color: var(--text-secondary);
+    font-weight: 600;
+}
+
+.trainer-mini-correct {
+    color: var(--success);
+}
+
+.trainer-mini-wrong {
+    color: var(--error);
+}
+
+.trainer-card {
+    min-height: 150px;
+}
+
+.trainer-input {
+    width: 100%;
+    padding: 16px 20px;
+    border: 2px solid var(--border);
+    border-radius: 12px;
+    font-size: 1rem;
+    margin-bottom: 12px;
+    transition: border-color 0.2s;
+    background: var(--bg);
+    color: var(--text);
+}
+
+.trainer-input:focus {
+    outline: none;
+    border-color: var(--primary);
+}
+
+.trainer-buttons {
+    display: flex;
+    gap: 10px;
+}
+
+.trainer-buttons .btn {
+    flex: 1;
+}
+
+.trainer-hint-btn {
+    background: transparent;
+    border: 2px solid var(--border);
+    color: var(--text-secondary);
+}
+
+.trainer-hint-btn:hover {
+    border-color: var(--primary);
+    color: var(--primary);
+}
+
+.trainer-hint {
+    background: var(--primary-light-2);
+    padding: 12px 16px;
+    border-radius: 10px;
+    margin-bottom: 16px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 0.9rem;
+    color: var(--text);
+}
+
+.trainer-hint.hidden {
+    display: none;
+}
+
+.trainer-feedback {
+    background: var(--card-bg);
+    border-radius: 16px;
+    padding: 24px;
+    text-align: center;
+    box-shadow: 0 4px 12px var(--shadow);
+    margin-bottom: 16px;
+}
+
+.trainer-feedback.hidden {
+    display: none;
+}
+
+.trainer-feedback-icon {
+    font-size: 3rem;
+    margin-bottom: 8px;
+}
+
+.trainer-feedback-text {
+    font-size: 1.2rem;
+    font-weight: 700;
+    margin-bottom: 12px;
+}
+
+.trainer-feedback.correct .trainer-feedback-text {
+    color: var(--success);
+}
+
+.trainer-feedback.wrong .trainer-feedback-text {
+    color: var(--error);
+}
+
+.trainer-explanation {
+    background: var(--bg);
+    padding: 14px;
+    border-radius: 10px;
+    font-size: 0.9rem;
+    line-height: 1.6;
+    margin-bottom: 16px;
+    text-align: left;
+}
+

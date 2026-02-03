@@ -1,0 +1,116 @@
+/* Прогресс */
+.progress-bar {
+    height: 6px;
+    background: var(--border);
+    border-radius: 3px;
+    overflow: hidden;
+    margin-bottom: 10px;
+}
+
+.progress-fill {
+    height: 100%;
+    background: var(--primary);
+    transition: width 0.3s ease;
+}
+
+.progress-text {
+    text-align: center;
+    color: var(--text-secondary);
+    font-size: 0.875rem;
+    margin-bottom: 20px;
+}
+
+/* Карточка */
+.card {
+    background: rgba(255, 255, 255, 0.75);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    border: 1px solid rgba(255, 255, 255, 0.3);
+    border-radius: 20px;
+    padding: 40px 30px;
+    min-height: 200px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 10px 40px -5px rgba(99, 102, 241, 0.15);
+    margin-bottom: 20px;
+    overflow-x: auto;
+    max-width: 100%;
+}
+
+[data-theme="dark"] .card {
+    background: rgba(30, 41, 59, 0.7);
+    border: 1px solid rgba(129, 140, 248, 0.15);
+    box-shadow: 0 10px 40px -5px rgba(0, 0, 0, 0.4);
+}
+
+.card-question {
+    font-size: 1.5rem;
+    text-align: center;
+    line-height: 2;
+    max-width: 100%;
+    overflow-x: auto;
+}
+
+/* Поле ввода */
+.answer-section {
+    margin-bottom: 20px;
+}
+
+.answer-section.hidden {
+    display: none;
+}
+
+#text-answer,
+#russian-text-answer {
+    width: 100%;
+    padding: 16px 20px;
+    border: 2px solid var(--border);
+    border-radius: 12px;
+    font-size: 1rem;
+    margin-bottom: 15px;
+    transition: border-color 0.2s;
+    background: var(--bg);
+    color: var(--text);
+}
+
+#text-answer:focus,
+#russian-text-answer:focus {
+    outline: none;
+    border-color: var(--primary);
+}
+
+/* Варианты ответа */
+.choices {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.choice-btn {
+    padding: 20px;
+    border: 2px solid var(--border);
+    border-radius: 12px;
+    background: var(--card-bg);
+    font-size: 1.1rem;
+    cursor: pointer;
+    transition: all 0.2s;
+    text-align: center;
+    line-height: 1.8;
+}
+
+.choice-btn:hover {
+    border-color: var(--primary);
+    background: var(--primary-light);
+}
+
+.choice-btn.correct {
+    border-color: var(--success);
+    background: var(--success-light);
+}
+
+.choice-btn.wrong {
+    border-color: var(--error);
+    background: var(--error-light);
+}
+

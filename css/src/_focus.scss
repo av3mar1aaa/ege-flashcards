@@ -1,0 +1,289 @@
+/* ================================================================
+   РЕЖИМ ФОКУСИРОВКИ
+   ================================================================ */
+
+.focus-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 30px;
+    padding: 20px 0;
+}
+
+.focus-visual {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 16px;
+}
+
+.focus-breath-circle {
+    width: 120px;
+    height: 120px;
+    border-radius: 50%;
+    background: radial-gradient(circle, var(--primary-light-3), var(--primary-light));
+    border: 3px solid var(--primary);
+    animation: breathe 8s ease-in-out infinite;
+}
+
+@keyframes breathe {
+    0%, 100% { transform: scale(0.8); opacity: 0.6; }
+    50% { transform: scale(1.2); opacity: 1; }
+}
+
+.focus-breath-text {
+    color: var(--text-secondary);
+    font-size: 1rem;
+    font-weight: 600;
+    min-height: 1.5em;
+}
+
+.focus-quote {
+    text-align: center;
+    max-width: 500px;
+    padding: 20px;
+}
+
+.focus-quote-text {
+    font-size: 1.1rem;
+    font-style: italic;
+    color: var(--text);
+    line-height: 1.8;
+    margin: 0;
+}
+
+.focus-quote-author {
+    display: block;
+    margin-top: 12px;
+    color: var(--text-secondary);
+    font-size: 0.9rem;
+    font-style: normal;
+}
+
+.focus-new-quote-btn {
+    padding: 10px 24px;
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    background: var(--bg);
+    color: var(--text-secondary);
+    font-weight: 600;
+    font-size: 0.9rem;
+    cursor: pointer;
+    transition: all 0.2s;
+}
+
+.focus-new-quote-btn:hover {
+    border-color: var(--primary);
+    color: var(--primary);
+}
+
+/* Музыка */
+.focus-music-section {
+    width: 100%;
+    max-width: 550px;
+}
+
+.focus-music-title {
+    font-size: 1rem;
+    font-weight: 700;
+    color: var(--text);
+    margin: 0 0 14px 0;
+    text-align: center;
+}
+
+.focus-tracks {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 8px;
+    margin-bottom: 16px;
+}
+
+.focus-track {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 10px 12px;
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    background: var(--card-bg);
+    cursor: pointer;
+    transition: all 0.2s;
+    text-align: left;
+}
+
+.focus-track:hover {
+    border-color: var(--primary);
+    background: var(--primary-light);
+}
+
+.focus-track.active {
+    border-color: var(--primary);
+    background: var(--primary-light-2);
+    box-shadow: 0 0 0 1px var(--primary);
+}
+
+.focus-track-icon {
+    font-size: 1.5rem;
+    flex-shrink: 0;
+}
+
+.focus-track-info {
+    display: flex;
+    flex-direction: column;
+    gap: 1px;
+    min-width: 0;
+}
+
+.focus-track-title {
+    font-weight: 600;
+    font-size: 0.85rem;
+    color: var(--text);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.focus-track-desc {
+    font-size: 0.75rem;
+    color: var(--text-secondary);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.focus-track-badge {
+    font-size: 0.65rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    color: var(--success);
+    background: rgba(34, 197, 94, 0.1);
+    border: 1px solid rgba(34, 197, 94, 0.3);
+    padding: 2px 6px;
+    border-radius: 4px;
+    flex-shrink: 0;
+    margin-left: auto;
+}
+
+.focus-player-wrapper {
+    border-radius: 12px;
+    overflow: hidden;
+    background: #000;
+    aspect-ratio: 16 / 9;
+    max-height: 280px;
+}
+
+.focus-local-player {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    padding: 24px;
+    height: 100%;
+    justify-content: center;
+    background: linear-gradient(135deg, #1a1a2e, #16213e);
+}
+
+.focus-local-player-info {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+}
+
+.focus-local-player-icon {
+    font-size: 2.5rem;
+}
+
+.focus-local-player-title {
+    font-weight: 700;
+    font-size: 1.1rem;
+    color: #e2e8f0;
+}
+
+.focus-local-player-desc {
+    font-size: 0.85rem;
+    color: #94a3b8;
+    margin-top: 2px;
+}
+
+.focus-local-player-controls {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.focus-volume-slider {
+    flex: 1;
+    -webkit-appearance: none;
+    appearance: none;
+    height: 6px;
+    border-radius: 3px;
+    background: #334155;
+    outline: none;
+    cursor: pointer;
+}
+
+.focus-volume-slider::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    width: 18px;
+    height: 18px;
+    border-radius: 50%;
+    background: var(--primary);
+    cursor: pointer;
+    border: 2px solid #fff;
+}
+
+.focus-volume-slider::-moz-range-thumb {
+    width: 18px;
+    height: 18px;
+    border-radius: 50%;
+    background: var(--primary);
+    cursor: pointer;
+    border: 2px solid #fff;
+}
+
+.focus-volume-label {
+    font-size: 0.8rem;
+    color: #94a3b8;
+    min-width: 35px;
+    text-align: right;
+}
+
+.focus-player-iframe {
+    width: 100%;
+    height: 100%;
+    display: block;
+}
+
+.focus-player-placeholder {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 100%;
+    color: #888;
+    font-size: 0.9rem;
+}
+
+.focus-stop-btn {
+    display: block;
+    margin: 12px auto 0;
+    padding: 8px 24px;
+    border: 1px solid var(--error);
+    border-radius: 10px;
+    background: transparent;
+    color: var(--error);
+    font-weight: 600;
+    font-size: 0.9rem;
+    cursor: pointer;
+    transition: all 0.2s;
+}
+
+.focus-stop-btn:hover {
+    background: var(--error);
+    color: white;
+}
+
+@media (max-width: 500px) {
+    .focus-tracks {
+        grid-template-columns: 1fr;
+    }
+}

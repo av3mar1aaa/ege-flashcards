@@ -5,7 +5,9 @@
   "main": "index.html",
   "scripts": {
     "start": "npx serve .",
-    "dev": "npx live-server --port=3000"
+    "dev": "npx live-server --port=3000",
+    "build:css": "sass css/src/main.scss css/style.css --no-source-map",
+    "watch:css": "sass css/src/main.scss css/style.css --no-source-map --watch"
   },
   "keywords": [
     "ege",
@@ -27,5 +29,8 @@
   "homepage": "https://ave.github.io/ege-flashcards",
   "bugs": {
     "url": "https://github.com/ave/ege-flashcards/issues"
+  },
+  "devDependencies": {
+    "sass": "^1.97.3"
   }
 }

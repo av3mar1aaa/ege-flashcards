@@ -1530,6 +1530,12 @@ const App = {
             });
         });
 
+        // Логотип — переход на главную
+        document.getElementById('brand-logo').addEventListener('click', (e) => {
+            e.preventDefault();
+            this.showScreen('main');
+        });
+
         // Кнопка поиска
         document.getElementById('search-hint-btn').addEventListener('click', () => Search.open());
 

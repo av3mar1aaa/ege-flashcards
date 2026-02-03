@@ -1,0 +1,152 @@
+/* ===== ИНФОРМАТИКА — ФОРМУЛЫ И ШАБЛОНЫ ===== */
+
+.cs-stats {
+    display: flex;
+    gap: 20px;
+    justify-content: center;
+    margin: 20px 0;
+}
+
+.cs-stat {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 15px 25px;
+    background: var(--card-bg);
+    border-radius: 12px;
+}
+
+.cs-stat-value {
+    font-size: 2rem;
+    font-weight: 700;
+    color: var(--primary);
+}
+
+.cs-stat-label {
+    font-size: 0.85rem;
+    color: var(--text-secondary);
+}
+
+/* Формулы информатики */
+#cs-formulas-screen .formulas-content {
+    max-height: 75vh;
+    overflow-y: auto;
+    padding-right: 8px;
+}
+
+#cs-formulas-screen .formulas-category {
+    scroll-margin-top: 80px;
+}
+
+/* Шаблоны Python */
+.templates-content {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    padding: 20px;
+    max-height: 75vh;
+    overflow-y: auto;
+    padding-right: 8px;
+}
+
+.templates-category {
+    background: var(--card-bg);
+    border-radius: 16px;
+    padding: 20px;
+    box-shadow: 0 4px 6px -1px var(--shadow);
+    scroll-margin-top: 80px;
+}
+
+.templates-category-title {
+    font-size: 1.1rem;
+    font-weight: 700;
+    color: var(--primary);
+    margin-bottom: 12px;
+    padding-bottom: 10px;
+    border-bottom: 2px solid var(--border);
+}
+
+.templates-category-list {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+}
+
+.template-item {
+    background: var(--bg);
+    border-radius: 12px;
+    padding: 16px;
+}
+
+.template-name {
+    font-weight: 700;
+    color: var(--text);
+    margin-bottom: 4px;
+    font-size: 0.95rem;
+}
+
+.template-desc {
+    font-size: 0.85rem;
+    color: var(--text-secondary);
+    margin-bottom: 12px;
+}
+
+/* Блок кода */
+.code-block {
+    background: #1e1e2e;
+    border-radius: 10px;
+    padding: 16px;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+}
+
+.code-block pre {
+    margin: 0;
+    padding: 0;
+}
+
+.code-block code {
+    font-family: 'JetBrains Mono', 'Fira Code', 'SF Mono', 'Consolas', 'Monaco', monospace;
+    font-size: 0.82rem;
+    line-height: 1.6;
+    color: #cdd6f4;
+    white-space: pre;
+    tab-size: 4;
+}
+
+/* Подсветка синтаксиса Python (Catppuccin Mocha) */
+.py-keyword {
+    color: #cba6f7;
+    font-weight: 600;
+}
+
+.py-builtin {
+    color: #89b4fa;
+}
+
+.py-funcname {
+    color: #89dceb;
+    font-weight: 600;
+}
+
+.py-string {
+    color: #a6e3a1;
+}
+
+.py-fstring {
+    color: #a6e3a1;
+}
+
+.py-comment {
+    color: #6c7086;
+    font-style: italic;
+}
+
+.py-number {
+    color: #fab387;
+}
+
+.py-decorator {
+    color: #f9e2af;
+}
+

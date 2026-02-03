@@ -1,0 +1,214 @@
+/* ===== WOW ЭФФЕКТЫ ===== */
+
+/* Stagger-анимация появления */
+@keyframes staggerIn {
+    from {
+        opacity: 0;
+        transform: translateY(30px) scale(0.95);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+    }
+}
+
+.screen.active .section-card,
+.screen.active .formula-item,
+.screen.active .template-item,
+.screen.active .stat,
+.screen.active .formulas-category,
+.screen.active .task-item {
+    animation: staggerIn 0.5s cubic-bezier(0.4, 0, 0.2, 1) both;
+}
+
+.screen.active .section-card:nth-child(1),
+.screen.active .formula-item:nth-child(1),
+.screen.active .template-item:nth-child(1),
+.screen.active .task-item:nth-child(1) { animation-delay: 0.05s; }
+.screen.active .section-card:nth-child(2),
+.screen.active .formula-item:nth-child(2),
+.screen.active .template-item:nth-child(2),
+.screen.active .task-item:nth-child(2) { animation-delay: 0.1s; }
+.screen.active .section-card:nth-child(3),
+.screen.active .formula-item:nth-child(3),
+.screen.active .template-item:nth-child(3),
+.screen.active .task-item:nth-child(3) { animation-delay: 0.15s; }
+.screen.active .section-card:nth-child(4),
+.screen.active .formula-item:nth-child(4),
+.screen.active .template-item:nth-child(4),
+.screen.active .task-item:nth-child(4) { animation-delay: 0.2s; }
+.screen.active .section-card:nth-child(5),
+.screen.active .formula-item:nth-child(5),
+.screen.active .template-item:nth-child(5),
+.screen.active .task-item:nth-child(5) { animation-delay: 0.25s; }
+.screen.active .section-card:nth-child(6),
+.screen.active .formula-item:nth-child(6),
+.screen.active .template-item:nth-child(6),
+.screen.active .task-item:nth-child(6) { animation-delay: 0.3s; }
+.screen.active .section-card:nth-child(7),
+.screen.active .formula-item:nth-child(7) { animation-delay: 0.35s; }
+.screen.active .section-card:nth-child(8),
+.screen.active .formula-item:nth-child(8) { animation-delay: 0.4s; }
+
+/* Пульсирующее свечение primary-кнопок */
+@keyframes glowPulse {
+    0%, 100% {
+        box-shadow: 0 4px 15px rgba(99, 102, 241, 0.3);
+    }
+    50% {
+        box-shadow: 0 4px 25px rgba(99, 102, 241, 0.5), 0 0 40px rgba(99, 102, 241, 0.15);
+    }
+}
+
+.btn-primary {
+    animation: glowPulse 3s ease-in-out infinite;
+}
+
+/* Ripple-эффект (CSS часть) */
+.ripple-effect {
+    position: absolute;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.4);
+    transform: scale(0);
+    animation: rippleExpand 0.6s ease-out forwards;
+    pointer-events: none;
+}
+
+@keyframes rippleExpand {
+    to {
+        transform: scale(4);
+        opacity: 0;
+    }
+}
+
+/* Плавающие частицы */
+.container::before,
+.container::after {
+    content: '';
+    position: fixed;
+    border-radius: 50%;
+    pointer-events: none;
+    z-index: 0;
+    opacity: 0.15;
+    background: var(--primary);
+    animation: floatParticle 8s ease-in-out infinite;
+}
+
+.container::before {
+    width: 200px;
+    height: 200px;
+    top: 10%;
+    left: -60px;
+    filter: blur(60px);
+    animation-delay: 0s;
+}
+
+.container::after {
+    width: 150px;
+    height: 150px;
+    bottom: 15%;
+    right: -40px;
+    filter: blur(50px);
+    background: var(--primary-accent);
+    animation-delay: -4s;
+}
+
+@keyframes floatParticle {
+    0%, 100% {
+        transform: translateY(0px) translateX(0px);
+    }
+    25% {
+        transform: translateY(-30px) translateX(15px);
+    }
+    50% {
+        transform: translateY(-10px) translateX(-10px);
+    }
+    75% {
+        transform: translateY(-40px) translateX(5px);
+    }
+}
+
+/* Эффект свечения для stat-value */
+.stat-value {
+    text-shadow: 0 0 20px rgba(99, 102, 241, 0.3);
+}
+
+[data-theme="dark"] .stat-value {
+    text-shadow: 0 0 20px rgba(129, 140, 248, 0.4);
+}
+
+/* Улучшенные тени и переходы для интерактивных элементов */
+.formula-item,
+.template-item,
+.formulas-category {
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.formula-item:hover,
+.template-item:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 25px rgba(99, 102, 241, 0.12);
+}
+
+/* 3D tilt подсветка (CSS часть — JS добавляет стили) */
+.section-card .tilt-glare {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    border-radius: inherit;
+    pointer-events: none;
+    opacity: 0;
+    transition: opacity 0.3s;
+    background: radial-gradient(circle at var(--glare-x, 50%) var(--glare-y, 50%),
+        rgba(255, 255, 255, 0.2) 0%,
+        transparent 60%);
+}
+
+.section-card:hover .tilt-glare {
+    opacity: 1;
+}
+
+/* prefers-reduced-motion */
+@media (prefers-reduced-motion: reduce) {
+    *, *::before, *::after {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
+    }
+    body {
+        animation: none;
+        background-size: 100% 100%;
+    }
+    .container::before,
+    .container::after {
+        animation: none;
+    }
+}
+
+/* Адаптив */
+@media (max-width: 600px) {
+    .cs-stats {
+        flex-direction: column;
+        gap: 10px;
+    }
+
+    .cs-stat {
+        padding: 12px 16px;
+    }
+
+    .cs-stat-value {
+        font-size: 1.5rem;
+    }
+
+    .code-block {
+        padding: 12px;
+        border-radius: 8px;
+    }
+
+    .code-block code {
+        font-size: 0.75rem;
+    }
+}
+

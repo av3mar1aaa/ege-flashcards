@@ -1,0 +1,223 @@
+/* ===== АЛГЕБРА ===== */
+
+.algebra-stats {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 4px;
+    margin: 20px 0;
+    padding: 16px;
+    background: linear-gradient(135deg, var(--bg-secondary), var(--bg-tertiary));
+    border-radius: 12px;
+}
+
+.algebra-stat-value {
+    font-size: 2.5rem;
+    font-weight: 700;
+    color: var(--primary);
+}
+
+.algebra-stat-label {
+    font-size: 0.9rem;
+    color: var(--text-secondary);
+}
+
+.algebra-formulas-nav {
+    margin-bottom: 16px;
+    position: sticky;
+    top: 0;
+    z-index: 10;
+    background: var(--bg);
+    padding: 8px 0;
+}
+
+#algebra-formulas-screen .formulas-content {
+    max-height: 75vh;
+    overflow-y: auto;
+    padding-right: 8px;
+}
+
+#algebra-formulas-screen .formulas-category {
+    margin-bottom: 24px;
+    scroll-margin-top: 80px;
+}
+
+#algebra-formulas-screen .formulas-category-title {
+    background: linear-gradient(135deg, var(--primary), var(--primary-accent));
+    color: white;
+    padding: 12px 16px;
+    border-radius: 12px 12px 0 0;
+    font-weight: 600;
+    font-size: 1.1rem;
+    position: sticky;
+    top: 0;
+    z-index: 5;
+}
+
+#algebra-formulas-screen .formulas-category-list {
+    background: var(--card-bg);
+    border-radius: 0 0 12px 12px;
+    padding: 8px;
+}
+
+#algebra-formulas-screen .formula-item {
+    display: flex;
+    flex-direction: column;
+    padding: 12px 16px;
+    border-bottom: 1px solid var(--border);
+}
+
+#algebra-formulas-screen .formula-item:last-child {
+    border-bottom: none;
+}
+
+#algebra-formulas-screen .formula-name {
+    font-weight: 500;
+    color: var(--text);
+    margin-bottom: 8px;
+    font-size: 0.95rem;
+}
+
+#algebra-formulas-screen .formula-math {
+    font-size: 1.1rem;
+    color: var(--primary);
+    overflow-x: auto;
+    padding: 4px 0;
+}
+
+@media (max-width: 600px) {
+    #algebra-formulas-screen .formulas-content {
+        max-height: 70vh;
+    }
+
+    #algebra-formulas-screen .formula-math {
+        font-size: 0.95rem;
+    }
+}
+
+/* ===== ГЕОМЕТРИЯ ===== */
+
+.geometry-stats {
+    display: flex;
+    gap: 20px;
+    justify-content: center;
+    margin: 20px 0;
+}
+
+.geometry-stat {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 4px;
+    padding: 16px 24px;
+    background: linear-gradient(135deg, var(--bg-secondary), var(--bg-tertiary));
+    border-radius: 12px;
+}
+
+.geometry-stat-value {
+    font-size: 2rem;
+    font-weight: 700;
+    color: var(--primary);
+}
+
+.geometry-stat-label {
+    font-size: 0.85rem;
+    color: var(--text-secondary);
+}
+
+.geometry-formulas-nav {
+    margin-bottom: 16px;
+    position: sticky;
+    top: 0;
+    z-index: 10;
+    background: var(--bg);
+    padding: 8px 0;
+}
+
+#planimetry-screen .formulas-content,
+#stereometry-screen .formulas-content {
+    max-height: 75vh;
+    overflow-y: auto;
+    padding-right: 8px;
+}
+
+#planimetry-screen .formulas-category,
+#stereometry-screen .formulas-category {
+    margin-bottom: 24px;
+    scroll-margin-top: 80px;
+}
+
+#planimetry-screen .formulas-category-title,
+#stereometry-screen .formulas-category-title {
+    background: linear-gradient(135deg, var(--primary), var(--primary-accent));
+    color: white;
+    padding: 12px 16px;
+    border-radius: 12px 12px 0 0;
+    font-weight: 600;
+    font-size: 1.1rem;
+    position: sticky;
+    top: 0;
+    z-index: 5;
+}
+
+#planimetry-screen .formulas-category-list,
+#stereometry-screen .formulas-category-list {
+    background: var(--card-bg);
+    border-radius: 0 0 12px 12px;
+    padding: 8px;
+}
+
+#planimetry-screen .formula-item,
+#stereometry-screen .formula-item {
+    display: flex;
+    flex-direction: column;
+    padding: 12px 16px;
+    border-bottom: 1px solid var(--border);
+}
+
+#planimetry-screen .formula-item:last-child,
+#stereometry-screen .formula-item:last-child {
+    border-bottom: none;
+}
+
+#planimetry-screen .formula-name,
+#stereometry-screen .formula-name {
+    font-weight: 500;
+    color: var(--text);
+    margin-bottom: 8px;
+    font-size: 0.95rem;
+}
+
+#planimetry-screen .formula-math,
+#stereometry-screen .formula-math {
+    font-size: 1.1rem;
+    color: var(--primary);
+    overflow-x: auto;
+    padding: 4px 0;
+}
+
+@media (max-width: 600px) {
+    .geometry-stats {
+        flex-direction: column;
+        gap: 10px;
+    }
+
+    .geometry-stat {
+        padding: 12px 16px;
+    }
+
+    .geometry-stat-value {
+        font-size: 1.5rem;
+    }
+
+    #planimetry-screen .formulas-content,
+    #stereometry-screen .formulas-content {
+        max-height: 70vh;
+    }
+
+    #planimetry-screen .formula-math,
+    #stereometry-screen .formula-math {
+        font-size: 0.95rem;
+    }
+}
+

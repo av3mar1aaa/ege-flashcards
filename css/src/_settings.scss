@@ -1,0 +1,347 @@
+/* ===== НАСТРОЙКИ ===== */
+
+.settings-btn {
+    position: fixed;
+    top: 16px;
+    right: 16px;
+    z-index: 50;
+    width: 44px;
+    height: 44px;
+    border-radius: 50%;
+    border: 1px solid var(--border);
+    background: var(--card-bg);
+    color: var(--text-secondary);
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 2px 8px var(--shadow-light);
+    transition: all 0.2s ease;
+}
+
+.settings-btn:hover {
+    color: var(--primary);
+    border-color: var(--primary);
+    transform: rotate(45deg);
+    box-shadow: 0 4px 12px var(--shadow);
+}
+
+.settings-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.5);
+    z-index: 100;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    opacity: 1;
+    transition: opacity 0.25s ease;
+}
+
+.settings-overlay.hidden {
+    display: none;
+}
+
+.settings-panel {
+    background: var(--card-bg);
+    border-radius: 20px;
+    width: 90%;
+    max-width: 400px;
+    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+    overflow: hidden;
+    animation: settingsSlideIn 0.25s ease-out;
+}
+
+@keyframes settingsSlideIn {
+    from {
+        opacity: 0;
+        transform: translateY(20px) scale(0.95);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+    }
+}
+
+.settings-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 20px 24px;
+    border-bottom: 1px solid var(--border);
+}
+
+.settings-header h3 {
+    font-size: 1.2rem;
+    color: var(--text);
+    margin: 0;
+}
+
+.settings-close-btn {
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    border: none;
+    background: var(--bg);
+    color: var(--text-secondary);
+    font-size: 1.3rem;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.2s;
+}
+
+.settings-close-btn:hover {
+    background: var(--error-light);
+    color: var(--error);
+}
+
+.settings-body {
+    padding: 16px 24px 24px;
+}
+
+.settings-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 16px 0;
+    border-bottom: 1px solid var(--border);
+}
+
+.settings-item:last-child {
+    border-bottom: none;
+}
+
+.settings-item-info {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+}
+
+.settings-item-label {
+    font-weight: 600;
+    font-size: 0.95rem;
+    color: var(--text);
+}
+
+.settings-item-desc {
+    font-size: 0.8rem;
+    color: var(--text-secondary);
+}
+
+/* Разделитель в настройках */
+.settings-divider {
+    height: 1px;
+    background: var(--border);
+    margin: 8px 0;
+}
+
+/* Кнопки размера шрифта */
+.settings-font-size {
+    display: flex;
+    gap: 4px;
+    flex-shrink: 0;
+}
+
+.font-size-btn {
+    width: 36px;
+    height: 36px;
+    border: 2px solid var(--border);
+    border-radius: 8px;
+    background: var(--bg);
+    color: var(--text);
+    cursor: pointer;
+    font-weight: 600;
+    transition: all 0.2s;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.font-size-btn[data-size="small"] {
+    font-size: 0.7rem;
+}
+
+.font-size-btn[data-size="normal"] {
+    font-size: 0.9rem;
+}
+
+.font-size-btn[data-size="large"] {
+    font-size: 1.15rem;
+}
+
+.font-size-btn:hover {
+    border-color: var(--primary);
+}
+
+.font-size-btn.active {
+    background: var(--primary);
+    color: white;
+    border-color: var(--primary);
+}
+
+/* Select в настройках */
+.settings-select {
+    padding: 8px 12px;
+    border: 2px solid var(--border);
+    border-radius: 8px;
+    background: var(--bg);
+    color: var(--text);
+    font-size: 0.9rem;
+    cursor: pointer;
+    flex-shrink: 0;
+    min-width: 70px;
+    text-align: center;
+}
+
+.settings-select:focus {
+    outline: none;
+    border-color: var(--primary);
+}
+
+/* Кнопки действий (экспорт/импорт) */
+.settings-actions {
+    display: flex;
+    gap: 8px;
+    flex-shrink: 0;
+}
+
+.settings-action-btn {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    padding: 8px 14px;
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    background: var(--bg);
+    color: var(--text);
+    font-size: 0.8rem;
+    cursor: pointer;
+    transition: all 0.2s;
+    white-space: nowrap;
+}
+
+.settings-action-btn:hover {
+    border-color: var(--primary);
+    color: var(--primary);
+}
+
+/* Кнопка сброса */
+.settings-danger-btn {
+    padding: 8px 16px;
+    border: 2px solid var(--error);
+    border-radius: 8px;
+    background: transparent;
+    color: var(--error);
+    font-size: 0.85rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s;
+    flex-shrink: 0;
+}
+
+.settings-danger-btn:hover {
+    background: var(--error);
+    color: white;
+}
+
+/* Размеры шрифта */
+[data-font-size="small"] {
+    font-size: 14px;
+}
+
+[data-font-size="large"] {
+    font-size: 18px;
+}
+
+/* Отключение анимаций */
+[data-animations="off"] .screen.active {
+    animation: none;
+}
+
+[data-animations="off"] *,
+[data-animations="off"] *::before,
+[data-animations="off"] *::after {
+    transition-duration: 0s !important;
+    animation-duration: 0s !important;
+    animation: none !important;
+}
+
+[data-animations="off"] body {
+    background-size: 100% 100% !important;
+}
+
+[data-animations="off"] .container::before,
+[data-animations="off"] .container::after {
+    display: none;
+}
+
+/* Toggle switch */
+.theme-switch {
+    position: relative;
+    width: 52px;
+    height: 28px;
+    flex-shrink: 0;
+}
+
+.theme-switch input {
+    opacity: 0;
+    width: 0;
+    height: 0;
+}
+
+.theme-switch-slider {
+    position: absolute;
+    cursor: pointer;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: var(--border);
+    border-radius: 28px;
+    transition: all 0.3s ease;
+}
+
+.theme-switch-slider::before {
+    content: '';
+    position: absolute;
+    width: 22px;
+    height: 22px;
+    left: 3px;
+    bottom: 3px;
+    background: white;
+    border-radius: 50%;
+    transition: all 0.3s ease;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+}
+
+.theme-switch input:checked + .theme-switch-slider {
+    background: var(--primary);
+}
+
+.theme-switch input:checked + .theme-switch-slider::before {
+    transform: translateX(24px);
+}
+
+/* Уменьшение opacity декораций в тёмной теме */
+[data-theme="dark"] .decorations span {
+    opacity: 0.08;
+    animation-name: floatInDark;
+}
+
+@keyframes floatInDark {
+    to {
+        opacity: 0.08;
+    }
+}
+
+/* Fix for text-answer input in dark mode */
+[data-theme="dark"] #text-answer {
+    background: var(--bg);
+    color: var(--text);
+}
+
