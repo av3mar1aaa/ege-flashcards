@@ -3,7 +3,7 @@
  * Кэширует ресурсы для офлайн-доступа
  */
 
-const CACHE_NAME = 'ege-trainer-v12';
+const CACHE_NAME = 'ege-trainer-v13';
 const ASSETS = [
     './',
     './index.html',
@@ -81,10 +81,24 @@ self.addEventListener('fetch', (event) => {
         return;
     }
 
+    // Network-first для HTML и JS — всегда свежая версия
+    if (event.request.destination === 'document' || event.request.url.endsWith('.js') || event.request.url.endsWith('.css')) {
+        event.respondWith(
+            fetch(event.request).then(response => {
+                if (response.ok) {
+                    const clone = response.clone();
+                    caches.open(CACHE_NAME).then(cache => cache.put(event.request, clone));
+                }
+                return response;
+            }).catch(() => caches.match(event.request))
+        );
+        return;
+    }
+
+    // Cache-first для остальных ресурсов (иконки, шрифты и т.д.)
     event.respondWith(
         caches.match(event.request).then((cached) => {
             return cached || fetch(event.request).then(response => {
-                // Кэшируем новые ресурсы
                 if (response.ok) {
                     const clone = response.clone();
                     caches.open(CACHE_NAME).then(cache => cache.put(event.request, clone));
@@ -92,7 +106,6 @@ self.addEventListener('fetch', (event) => {
                 return response;
             });
         }).catch(() => {
-            // Офлайн-фолбэк
             if (event.request.destination === 'document') {
                 return caches.match('./index.html');
             }
