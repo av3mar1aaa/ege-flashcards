@@ -3,7 +3,7 @@
  * Кэширует ресурсы для офлайн-доступа
  */
 
-const CACHE_NAME = 'ege-trainer-v13';
+const CACHE_NAME = 'ege-trainer-v17';
 const ASSETS = [
     './',
     './index.html',
@@ -33,6 +33,12 @@ const ASSETS = [
     './js/firebase-config.js',
     './js/auth.js',
     './js/cloud-storage.js',
+    './js/tools.js',
+    './js/calculator.js',
+    './js/focus.js',
+    './js/pomodoro.js',
+    './js/ide.js',
+    './audio/my-head-is-empty.mp3',
     './manifest.json'
 ];
 

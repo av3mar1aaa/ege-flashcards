@@ -2,7 +2,7 @@
 <html lang="ru">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
     <title>ЕГЭ Обучение — Тренажёр для подготовки</title>
 
     <!-- PWA -->
@@ -44,6 +44,47 @@
                 <kbd class="search-kbd">Esc</kbd>
             </div>
             <div id="search-results" class="search-results"></div>
+        </div>
+    </div>
+
+    <!-- Кнопка инструментов -->
+    <button id="tools-btn" class="tools-btn" aria-label="Инструменты">
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M14.7 6.3a1 1 0 000 1.4l1.6 1.6a1 1 0 001.4 0l3.77-3.77a6 6 0 01-7.94 7.94l-6.91 6.91a2.12 2.12 0 01-3-3l6.91-6.91a6 6 0 017.94-7.94l-3.76 3.76z"/>
+        </svg>
+    </button>
+
+    <!-- Панель инструментов -->
+    <div id="tools-overlay" class="tools-overlay hidden">
+        <div class="tools-panel">
+            <div class="tools-header">
+                <h3>Инструменты</h3>
+                <button id="tools-close-btn" class="settings-close-btn" aria-label="Закрыть">&times;</button>
+            </div>
+            <div class="tools-tabs">
+                <button class="tools-tab active" data-tool="calculator">
+                    <span class="tools-tab-icon">🧮</span>
+                    <span class="tools-tab-label">Калькулятор</span>
+                </button>
+                <button class="tools-tab" data-tool="focus">
+                    <span class="tools-tab-icon">🎯</span>
+                    <span class="tools-tab-label">Фокус</span>
+                </button>
+                <button class="tools-tab" data-tool="pomodoro">
+                    <span class="tools-tab-icon">🍅</span>
+                    <span class="tools-tab-label">Помодоро</span>
+                </button>
+                <button class="tools-tab" data-tool="ide">
+                    <span class="tools-tab-icon">💻</span>
+                    <span class="tools-tab-label">Редактор</span>
+                </button>
+            </div>
+            <div class="tools-body">
+                <div class="tools-content active" id="tool-calculator"></div>
+                <div class="tools-content" id="tool-focus"></div>
+                <div class="tools-content" id="tool-pomodoro"></div>
+                <div class="tools-content" id="tool-ide"></div>
+            </div>
         </div>
     </div>
 
@@ -1053,6 +1094,11 @@
     <script src="js/cloud-storage.js"></script>
     <script src="js/auth.js"></script>
     <script src="js/decorations.js"></script>
+    <script src="js/calculator.js"></script>
+    <script src="js/focus.js"></script>
+    <script src="js/pomodoro.js"></script>
+    <script src="js/ide.js"></script>
+    <script src="js/tools.js"></script>
     <script src="js/app.js"></script>
 </body>
 </html>

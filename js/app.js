@@ -47,6 +47,13 @@ const App = {
         this.initPWA();
         Auth.init();
 
+        // WOW-эффекты
+        this.initTiltEffect();
+        this.initRippleEffect();
+
+        // Инструменты
+        Tools.init();
+
         // Показать главный экран с декорациями
         this.showScreen('main');
     },
@@ -1919,6 +1926,73 @@ const App = {
         if ('serviceWorker' in navigator) {
             navigator.serviceWorker.register('./sw.js').catch(() => {});
         }
+    },
+
+    // ===== WOW ЭФФЕКТЫ =====
+
+    initTiltEffect() {
+        // Отключаем tilt-эффект на тач-устройствах — он мешает и вызывает баги
+        const isTouchDevice = window.matchMedia('(hover: none) and (pointer: coarse)').matches;
+        if (isTouchDevice) return;
+
+        const addTilt = (cards) => {
+            cards.forEach(card => {
+                if (card.dataset.tiltInit) return;
+                card.dataset.tiltInit = 'true';
+                card.style.transition = 'transform 0.15s ease-out';
+
+                // Добавить элемент блика
+                const glare = document.createElement('div');
+                glare.className = 'tilt-glare';
+                card.appendChild(glare);
+
+                card.addEventListener('mousemove', (e) => {
+                    const rect = card.getBoundingClientRect();
+                    const x = e.clientX - rect.left;
+                    const y = e.clientY - rect.top;
+                    const centerX = rect.width / 2;
+                    const centerY = rect.height / 2;
+                    const rotateX = (y - centerY) / centerY * -8;
+                    const rotateY = (x - centerX) / centerX * 8;
+
+                    card.style.transform = `perspective(1000px) rotateX(${rotateX}deg) rotateY(${rotateY}deg) scale(1.02)`;
+                    card.style.setProperty('--glare-x', `${(x / rect.width) * 100}%`);
+                    card.style.setProperty('--glare-y', `${(y / rect.height) * 100}%`);
+                });
+
+                card.addEventListener('mouseleave', () => {
+                    card.style.transform = '';
+                });
+            });
+        };
+
+        // Применить к текущим карточкам
+        addTilt(document.querySelectorAll('.section-card'));
+
+        // Наблюдать за новыми карточками (при смене экранов)
+        const observer = new MutationObserver(() => {
+            addTilt(document.querySelectorAll('.section-card'));
+        });
+        observer.observe(document.body, { childList: true, subtree: true });
+    },
+
+    initRippleEffect() {
+        document.addEventListener('click', (e) => {
+            const target = e.target.closest('.btn, .section-card');
+            if (!target) return;
+            if (document.documentElement.dataset.animations === 'off') return;
+
+            const rect = target.getBoundingClientRect();
+            const size = Math.max(rect.width, rect.height);
+            const ripple = document.createElement('span');
+            ripple.className = 'ripple-effect';
+            ripple.style.width = ripple.style.height = `${size}px`;
+            ripple.style.left = `${e.clientX - rect.left - size / 2}px`;
+            ripple.style.top = `${e.clientY - rect.top - size / 2}px`;
+
+            target.appendChild(ripple);
+            ripple.addEventListener('animationend', () => ripple.remove());
+        });
     }
 };
 
