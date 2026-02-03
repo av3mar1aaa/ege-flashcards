@@ -126,17 +126,33 @@ const Search = {
         }
 
         // Информатика
-        if (typeof CS_TASKS !== 'undefined') {
-            CS_TASKS.forEach(task => {
-                index.push({
-                    type: 'cs',
-                    typeLabel: 'Информатика',
-                    title: `Задание ${task.id}. ${task.title}`,
-                    subtitle: 'Теория',
-                    searchText: `задание ${task.id} ${task.title} информатика`.toLowerCase(),
-                    action: () => { App.openCSTask(task.id); }
+        if (typeof CS_FORMULAS !== 'undefined') {
+            for (const section of Object.values(CS_FORMULAS)) {
+                section.formulas.forEach(f => {
+                    index.push({
+                        type: 'cs',
+                        typeLabel: 'Информатика',
+                        title: f.name,
+                        subtitle: section.title,
+                        searchText: `${f.name} ${section.title} информатика формула`.toLowerCase(),
+                        action: () => { App.showCSFormulas(); }
+                    });
                 });
-            });
+            }
+        }
+        if (typeof CS_TEMPLATES !== 'undefined') {
+            for (const section of Object.values(CS_TEMPLATES)) {
+                section.templates.forEach(t => {
+                    index.push({
+                        type: 'cs',
+                        typeLabel: 'Информатика',
+                        title: t.name,
+                        subtitle: section.title,
+                        searchText: `${t.name} ${t.description} ${section.title} информатика шаблон python`.toLowerCase(),
+                        action: () => { App.showCSTemplates(); }
+                    });
+                });
+            }
         }
 
         // Навигационные пункты

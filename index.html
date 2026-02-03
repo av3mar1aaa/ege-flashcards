@@ -518,26 +518,55 @@
 
         <!-- ===== ИНФОРМАТИКА ===== -->
 
-        <!-- Экран списка заданий информатики -->
+        <!-- Главный экран информатики -->
         <div id="cs-screen" class="screen">
             <h1>Информатика</h1>
-            <p class="subtitle">Задания ЕГЭ</p>
-            <div class="tasks-list" id="cs-tasks-list">
-                <!-- Заполняется через JavaScript -->
+            <p class="subtitle">Справочник для ЕГЭ</p>
+            <div class="sections-grid">
+                <div class="section-card" id="cs-formulas-btn">
+                    <span class="section-icon">📐</span>
+                    <span class="section-title">Формулы</span>
+                </div>
+                <div class="section-card" id="cs-templates-btn">
+                    <span class="section-icon">🐍</span>
+                    <span class="section-title">Шаблоны</span>
+                </div>
+            </div>
+            <div class="cs-stats">
+                <div class="cs-stat">
+                    <span class="cs-stat-value" id="cs-formulas-count">0</span>
+                    <span class="cs-stat-label">формул</span>
+                </div>
+                <div class="cs-stat">
+                    <span class="cs-stat-value" id="cs-templates-count">0</span>
+                    <span class="cs-stat-label">шаблонов</span>
+                </div>
             </div>
             <button id="cs-back-btn" class="btn btn-link">← Назад</button>
         </div>
 
-        <!-- Экран теории информатики (напрямую открывается при выборе задания) -->
-        <div id="cs-task-screen" class="screen">
-            <div class="theory-header">
-                <h2 id="cs-task-title">Задание 1</h2>
-                <p class="subtitle" id="cs-task-subtitle">Анализ информационных моделей</p>
+        <!-- Экран формул информатики -->
+        <div id="cs-formulas-screen" class="screen">
+            <h2>Формулы информатики</h2>
+            <div class="cs-formulas-nav" id="cs-formulas-nav">
+                <!-- Dropdown навигация -->
             </div>
-            <div class="theory-content" id="cs-theory-content">
+            <div class="formulas-content" id="cs-formulas-content">
                 <!-- Заполняется через JavaScript -->
             </div>
-            <button id="cs-task-back-btn" class="btn btn-link">← К списку заданий</button>
+            <button id="cs-formulas-back-btn" class="btn btn-link">← Назад</button>
+        </div>
+
+        <!-- Экран шаблонов Python -->
+        <div id="cs-templates-screen" class="screen">
+            <h2>Шаблоны Python</h2>
+            <div class="cs-templates-nav" id="cs-templates-nav">
+                <!-- Dropdown навигация -->
+            </div>
+            <div class="templates-content" id="cs-templates-content">
+                <!-- Заполняется через JavaScript -->
+            </div>
+            <button id="cs-templates-back-btn" class="btn btn-link">← Назад</button>
         </div>
 
         <!-- Экран Тригонометрии -->
@@ -802,7 +831,7 @@
                     <div class="section-card" id="exam-ege-cs-part1-btn">
                         <span class="section-icon">💻</span>
                         <div>
-                            <span class="section-title">1 часть ЕГЭ</span>
+                            <span class="section-title">Тест</span>
                             <span class="section-subtitle">16 заданий по информатике</span>
                         </div>
                     </div>
@@ -814,7 +843,7 @@
                     <div class="section-card" id="exam-ege-rus-part1-btn">
                         <span class="section-icon">📝</span>
                         <div>
-                            <span class="section-title">1 часть ЕГЭ</span>
+                            <span class="section-title">Тест</span>
                             <span class="section-subtitle">17 заданий по русскому языку</span>
                         </div>
                     </div>

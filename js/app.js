@@ -79,7 +79,8 @@ const App = {
             literatureWork: document.getElementById('literature-work-screen'),
             // Информатика
             cs: document.getElementById('cs-screen'),
-            csTask: document.getElementById('cs-task-screen'),
+            csFormulas: document.getElementById('cs-formulas-screen'),
+            csTemplates: document.getElementById('cs-templates-screen'),
             // Алгебра
             algebra: document.getElementById('algebra-screen'),
             algebraFormulas: document.getElementById('algebra-formulas-screen'),
@@ -190,12 +191,17 @@ const App = {
             russianCompleteBtn: document.getElementById('russian-complete-btn'),
 
             // Информатика
-            csTasksList: document.getElementById('cs-tasks-list'),
             csBackBtn: document.getElementById('cs-back-btn'),
-            csTaskTitle: document.getElementById('cs-task-title'),
-            csTaskSubtitle: document.getElementById('cs-task-subtitle'),
-            csTaskBackBtn: document.getElementById('cs-task-back-btn'),
-            csTheoryContent: document.getElementById('cs-theory-content'),
+            csFormulasBtn: document.getElementById('cs-formulas-btn'),
+            csTemplatesBtn: document.getElementById('cs-templates-btn'),
+            csFormulasCount: document.getElementById('cs-formulas-count'),
+            csTemplatesCount: document.getElementById('cs-templates-count'),
+            csFormulasNav: document.getElementById('cs-formulas-nav'),
+            csFormulasContent: document.getElementById('cs-formulas-content'),
+            csFormulasBackBtn: document.getElementById('cs-formulas-back-btn'),
+            csTemplatesNav: document.getElementById('cs-templates-nav'),
+            csTemplatesContent: document.getElementById('cs-templates-content'),
+            csTemplatesBackBtn: document.getElementById('cs-templates-back-btn'),
 
             // Алгебра
             algebraFormulasBtn: document.getElementById('algebra-formulas-btn'),
@@ -229,7 +235,7 @@ const App = {
                 if (section === 'math') {
                     this.showScreen('math');
                 } else if (section === 'cs') {
-                    this.showCSTasks();
+                    this.showCSScreen();
                 } else if (section === 'russian') {
                     this.showScreen('russian');
                 }
@@ -891,49 +897,165 @@ const App = {
 
     // ===== ИНФОРМАТИКА =====
 
-    currentCSTask: null,
-
-    // Показать список заданий информатики
-    showCSTasks() {
-        let html = '';
-        CS_TASKS.forEach(task => {
-            html += `
-                <div class="task-item" data-cs-task-id="${task.id}">
-                    <span class="task-number">${task.id}</span>
-                    <span class="task-title">${task.title}</span>
-                </div>
-            `;
-        });
-        this.elements.csTasksList.innerHTML = html;
-
-        // Привязать клики по заданиям
-        document.querySelectorAll('[data-cs-task-id]').forEach(item => {
-            item.addEventListener('click', () => {
-                const taskId = parseInt(item.dataset.csTaskId);
-                this.openCSTask(taskId);
-            });
-        });
-
-        this.showScreen('cs');
+    // Показать главный экран информатики
+    showCSScreen() {
+        if (typeof getCSFormulasCount === 'function') {
+            this.elements.csFormulasCount.textContent = getCSFormulasCount();
+        }
+        if (typeof getCSTemplatesCount === 'function') {
+            this.elements.csTemplatesCount.textContent = getCSTemplatesCount();
+        }
+        this.showScreen('cs', 'cs');
     },
 
-    // Открыть задание информатики (сразу показывает теорию)
-    openCSTask(taskId) {
-        this.currentCSTask = getCSTask(taskId);
-        if (!this.currentCSTask) return;
+    // Показать формулы информатики
+    showCSFormulas(scrollToSection = null) {
+        const entries = Object.entries(CS_FORMULAS);
+        const firstTitle = entries[0][1].title;
+        let navHtml = `<div class="nav-dropdown">
+            <button class="nav-dropdown-toggle" aria-expanded="false">
+                <span class="nav-dropdown-label">${firstTitle}</span>
+                <svg class="nav-dropdown-arrow" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg>
+            </button>
+            <div class="nav-dropdown-menu hidden">`;
+        for (const [key, section] of entries) {
+            navHtml += `<button class="nav-dropdown-item" data-section="${key}">${section.title}</button>`;
+        }
+        navHtml += '</div></div>';
+        this.elements.csFormulasNav.innerHTML = navHtml;
+        this._bindNavDropdown(this.elements.csFormulasNav, 'cs-section-');
 
-        this.elements.csTaskTitle.textContent = `Задание ${taskId}. ${this.currentCSTask.title}`;
-        this.elements.csTaskSubtitle.textContent = '';
-        this.elements.csTheoryContent.innerHTML = this.currentCSTask.theory;
+        let html = '';
+        for (const [key, section] of Object.entries(CS_FORMULAS)) {
+            html += `<div class="formulas-category" id="cs-section-${key}">
+                <div class="formulas-category-title">${section.title}</div>
+                <div class="formulas-category-list">`;
+            section.formulas.forEach(formula => {
+                html += `<div class="formula-item">
+                    <div class="formula-name">${formula.name}</div>
+                    <div class="formula-math">$$${formula.formula}$$</div>
+                </div>`;
+            });
+            html += '</div></div>';
+        }
 
-        this.showScreen('csTask', 'cs');
+        this.elements.csFormulasContent.innerHTML = html;
+        this.showScreen('csFormulas', 'cs');
         this.renderMath();
+
+        if (scrollToSection) {
+            setTimeout(() => {
+                const sectionEl = document.getElementById(`cs-section-${scrollToSection}`);
+                if (sectionEl) sectionEl.scrollIntoView({ behavior: 'smooth', block: 'start' });
+            }, 100);
+        }
+    },
+
+    // Подсветка синтаксиса Python
+    highlightPython(code) {
+        // Экранируем HTML
+        let escaped = code.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+
+        // Порядок важен: сначала строки и комментарии, потом остальное
+        const tokens = [];
+        let id = 0;
+
+        // Заменяем строки и комментарии на токены-плейсхолдеры
+        // Многострочные строки
+        escaped = escaped.replace(/("""[\s\S]*?"""|'''[\s\S]*?''')/g, (m) => {
+            const tok = `__TOK${id}__`; tokens.push({ tok, html: `<span class="py-string">${m}</span>` }); id++; return tok;
+        });
+        // f-строки
+        escaped = escaped.replace(/(f'[^']*'|f"[^"]*")/g, (m) => {
+            const tok = `__TOK${id}__`; tokens.push({ tok, html: `<span class="py-fstring">${m}</span>` }); id++; return tok;
+        });
+        // Обычные строки
+        escaped = escaped.replace(/('[^']*'|"[^"]*")/g, (m) => {
+            const tok = `__TOK${id}__`; tokens.push({ tok, html: `<span class="py-string">${m}</span>` }); id++; return tok;
+        });
+        // Комментарии
+        escaped = escaped.replace(/(#.*)/gm, (m) => {
+            const tok = `__TOK${id}__`; tokens.push({ tok, html: `<span class="py-comment">${m}</span>` }); id++; return tok;
+        });
+        // Декораторы
+        escaped = escaped.replace(/(@\w+(\.\w+)*(\([^)]*\))?)/g, (m) => {
+            const tok = `__TOK${id}__`; tokens.push({ tok, html: `<span class="py-decorator">${m}</span>` }); id++; return tok;
+        });
+
+        // Ключевые слова
+        const keywords = ['from', 'import', 'def', 'return', 'if', 'elif', 'else', 'for', 'while', 'in', 'not', 'and', 'or', 'is', 'None', 'True', 'False', 'class', 'with', 'as', 'try', 'except', 'finally', 'raise', 'yield', 'lambda', 'pass', 'break', 'continue', 'del', 'assert', 'global', 'nonlocal'];
+        const kwPattern = new RegExp(`\\b(${keywords.join('|')})\\b`, 'g');
+        escaped = escaped.replace(kwPattern, '<span class="py-keyword">$1</span>');
+
+        // Встроенные функции
+        const builtins = ['print', 'len', 'range', 'int', 'str', 'float', 'list', 'dict', 'set', 'tuple', 'sorted', 'reversed', 'enumerate', 'zip', 'map', 'filter', 'sum', 'min', 'max', 'abs', 'round', 'open', 'type', 'isinstance', 'input', 'any', 'all', 'hex', 'bin', 'oct', 'chr', 'ord', 'bool', 'super', 'property', 'staticmethod', 'classmethod'];
+        const builtinPattern = new RegExp(`\\b(${builtins.join('|')})(?=\\()`, 'g');
+        escaped = escaped.replace(builtinPattern, '<span class="py-builtin">$1</span>');
+
+        // Имена функций после def
+        escaped = escaped.replace(/(<span class="py-keyword">def<\/span>\s+)(\w+)/g, '$1<span class="py-funcname">$2</span>');
+
+        // Числа (целые и дробные)
+        escaped = escaped.replace(/\b(\d+\.?\d*)\b/g, '<span class="py-number">$1</span>');
+
+        // Восстанавливаем токены
+        for (const { tok, html } of tokens) {
+            escaped = escaped.replace(tok, html);
+        }
+
+        return escaped;
+    },
+
+    // Показать шаблоны Python
+    showCSTemplates(scrollToSection = null) {
+        const entries = Object.entries(CS_TEMPLATES);
+        const firstTitle = entries[0][1].title;
+        let navHtml = `<div class="nav-dropdown">
+            <button class="nav-dropdown-toggle" aria-expanded="false">
+                <span class="nav-dropdown-label">${firstTitle}</span>
+                <svg class="nav-dropdown-arrow" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg>
+            </button>
+            <div class="nav-dropdown-menu hidden">`;
+        for (const [key, section] of entries) {
+            navHtml += `<button class="nav-dropdown-item" data-section="${key}">${section.title}</button>`;
+        }
+        navHtml += '</div></div>';
+        this.elements.csTemplatesNav.innerHTML = navHtml;
+        this._bindNavDropdown(this.elements.csTemplatesNav, 'cs-tmpl-');
+
+        let html = '';
+        for (const [key, section] of Object.entries(CS_TEMPLATES)) {
+            html += `<div class="templates-category" id="cs-tmpl-${key}">
+                <div class="templates-category-title">${section.title}</div>
+                <div class="templates-category-list">`;
+            section.templates.forEach(tmpl => {
+                html += `<div class="template-item">
+                    <div class="template-name">${tmpl.name}</div>
+                    <div class="template-desc">${tmpl.description}</div>
+                    <div class="code-block"><pre><code>${this.highlightPython(tmpl.code)}</code></pre></div>
+                </div>`;
+            });
+            html += '</div></div>';
+        }
+
+        this.elements.csTemplatesContent.innerHTML = html;
+        this.showScreen('csTemplates', 'cs');
+
+        if (scrollToSection) {
+            setTimeout(() => {
+                const sectionEl = document.getElementById(`cs-tmpl-${scrollToSection}`);
+                if (sectionEl) sectionEl.scrollIntoView({ behavior: 'smooth', block: 'start' });
+            }, 100);
+        }
     },
 
     // Привязать события информатики
     bindCSEvents() {
         this.elements.csBackBtn.addEventListener('click', () => this.showScreen('main'));
-        this.elements.csTaskBackBtn.addEventListener('click', () => this.showCSTasks());
+        this.elements.csFormulasBtn.addEventListener('click', () => this.showCSFormulas());
+        this.elements.csTemplatesBtn.addEventListener('click', () => this.showCSTemplates());
+        this.elements.csFormulasBackBtn.addEventListener('click', () => this.showCSScreen());
+        this.elements.csTemplatesBackBtn.addEventListener('click', () => this.showCSScreen());
     },
 
     // ===== АЛГЕБРА =====
