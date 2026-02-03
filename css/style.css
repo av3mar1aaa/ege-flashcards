@@ -329,12 +329,16 @@ h1 {
     justify-content: center;
     box-shadow: 0 10px 25px -5px var(--shadow);
     margin-bottom: 20px;
+    overflow-x: auto;
+    max-width: 100%;
 }
 
 .card-question {
     font-size: 1.5rem;
     text-align: center;
     line-height: 2;
+    max-width: 100%;
+    overflow-x: auto;
 }
 
 /* Поле ввода */
@@ -553,6 +557,13 @@ h1 {
     font-size: 1.3em;
 }
 
+.katex-display {
+    overflow-x: auto;
+    overflow-y: hidden;
+    -webkit-overflow-scrolling: touch;
+    padding: 4px 0;
+}
+
 /* Кнопка просмотра формул */
 .btn-formulas {
     display: flex;
@@ -643,6 +654,7 @@ h1 {
     text-align: center;
     line-height: 2;
     border: 1px solid var(--border);
+    overflow-x: auto;
 }
 
 /* Сетка разделов */
@@ -934,6 +946,10 @@ h1 {
         font-size: 1.2rem;
     }
 
+    .katex {
+        font-size: 1.1em;
+    }
+
     .difficulty-buttons {
         flex-wrap: wrap;
     }
@@ -1008,6 +1024,7 @@ h1 {
     font-size: 1.1rem;
     color: var(--primary);
     margin-bottom: 5px;
+    overflow-x: auto;
 }
 
 .formula-card-hint {
@@ -1537,6 +1554,88 @@ h1 {
     }
 }
 
+/* ===== ДРОПДАУН НАВИГАЦИЯ ФОРМУЛ ===== */
+
+.nav-dropdown {
+    position: relative;
+}
+
+.nav-dropdown-toggle {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    width: 100%;
+    padding: 12px 16px;
+    border: 2px solid var(--border);
+    border-radius: 12px;
+    background: var(--card-bg);
+    color: var(--text);
+    font-size: 0.95rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s;
+}
+
+.nav-dropdown-toggle:hover {
+    border-color: var(--primary);
+}
+
+.nav-dropdown-toggle[aria-expanded="true"] {
+    border-color: var(--primary);
+    border-radius: 12px 12px 0 0;
+}
+
+.nav-dropdown-toggle[aria-expanded="true"] .nav-dropdown-arrow {
+    transform: rotate(180deg);
+}
+
+.nav-dropdown-arrow {
+    transition: transform 0.2s;
+    flex-shrink: 0;
+}
+
+.nav-dropdown-menu {
+    position: absolute;
+    top: 100%;
+    left: 0;
+    right: 0;
+    background: var(--card-bg);
+    border: 2px solid var(--primary);
+    border-top: 1px solid var(--border);
+    border-radius: 0 0 12px 12px;
+    max-height: 250px;
+    overflow-y: auto;
+    z-index: 20;
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15);
+}
+
+.nav-dropdown-menu.hidden {
+    display: none;
+}
+
+.nav-dropdown-item {
+    display: block;
+    width: 100%;
+    padding: 11px 16px;
+    border: none;
+    background: none;
+    color: var(--text);
+    font-size: 0.9rem;
+    text-align: left;
+    cursor: pointer;
+    transition: background 0.15s;
+    border-bottom: 1px solid var(--border);
+}
+
+.nav-dropdown-item:last-child {
+    border-bottom: none;
+}
+
+.nav-dropdown-item:hover {
+    background: var(--primary-light);
+    color: var(--primary);
+}
+
 /* ===== АЛГЕБРА ===== */
 
 .algebra-stats {
@@ -1562,45 +1661,16 @@ h1 {
 }
 
 .algebra-formulas-nav {
-    margin-bottom: 20px;
+    margin-bottom: 16px;
     position: sticky;
     top: 0;
     z-index: 10;
     background: var(--bg);
-    padding: 10px 0;
-}
-
-.algebra-nav-pills {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 8px;
-    justify-content: center;
-}
-
-.algebra-nav-pill {
-    padding: 8px 16px;
-    border: none;
-    background: var(--card-bg);
-    color: var(--text);
-    border-radius: 20px;
-    font-size: 0.85rem;
-    cursor: pointer;
-    transition: all 0.2s ease;
-    box-shadow: 0 2px 4px var(--shadow-light);
-}
-
-.algebra-nav-pill:hover {
-    background: var(--primary);
-    color: white;
-    transform: translateY(-2px);
-}
-
-.algebra-nav-pill:active {
-    transform: translateY(0);
+    padding: 8px 0;
 }
 
 #algebra-formulas-screen .formulas-content {
-    max-height: 65vh;
+    max-height: 75vh;
     overflow-y: auto;
     padding-right: 8px;
 }
@@ -1654,13 +1724,8 @@ h1 {
 }
 
 @media (max-width: 600px) {
-    .algebra-nav-pill {
-        padding: 6px 12px;
-        font-size: 0.75rem;
-    }
-
     #algebra-formulas-screen .formulas-content {
-        max-height: 60vh;
+        max-height: 70vh;
     }
 
     #algebra-formulas-screen .formula-math {
@@ -1699,46 +1764,17 @@ h1 {
 }
 
 .geometry-formulas-nav {
-    margin-bottom: 20px;
+    margin-bottom: 16px;
     position: sticky;
     top: 0;
     z-index: 10;
     background: var(--bg);
-    padding: 10px 0;
-}
-
-.geometry-nav-pills {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 8px;
-    justify-content: center;
-}
-
-.geometry-nav-pill {
-    padding: 8px 16px;
-    border: none;
-    background: var(--card-bg);
-    color: var(--text);
-    border-radius: 20px;
-    font-size: 0.85rem;
-    cursor: pointer;
-    transition: all 0.2s ease;
-    box-shadow: 0 2px 4px var(--shadow-light);
-}
-
-.geometry-nav-pill:hover {
-    background: var(--primary);
-    color: white;
-    transform: translateY(-2px);
-}
-
-.geometry-nav-pill:active {
-    transform: translateY(0);
+    padding: 8px 0;
 }
 
 #planimetry-screen .formulas-content,
 #stereometry-screen .formulas-content {
-    max-height: 65vh;
+    max-height: 75vh;
     overflow-y: auto;
     padding-right: 8px;
 }
@@ -1812,14 +1848,9 @@ h1 {
         font-size: 1.5rem;
     }
 
-    .geometry-nav-pill {
-        padding: 6px 12px;
-        font-size: 0.75rem;
-    }
-
     #planimetry-screen .formulas-content,
     #stereometry-screen .formulas-content {
-        max-height: 60vh;
+        max-height: 70vh;
     }
 
     #planimetry-screen .formula-math,
@@ -2730,7 +2761,220 @@ h1 {
     text-align: left;
 }
 
-/* ===== ЭКЗАМЕН ===== */
+/* ===== ЭКЗАМЕН: ВКЛАДКИ ПРЕДМЕТОВ ===== */
+
+.exam-tabs {
+    display: flex;
+    gap: 0;
+    margin: 20px 0;
+    border-radius: 12px;
+    overflow: hidden;
+    border: 2px solid var(--border);
+}
+
+.exam-tab {
+    flex: 1;
+    padding: 12px 16px;
+    border: none;
+    background: var(--card-bg);
+    color: var(--text-secondary);
+    font-size: 0.9rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s;
+}
+
+.exam-tab:not(:last-child) {
+    border-right: 1px solid var(--border);
+}
+
+.exam-tab.active {
+    background: var(--primary);
+    color: white;
+}
+
+.exam-tab:hover:not(.active) {
+    background: var(--primary-light);
+    color: var(--primary);
+}
+
+.exam-tab-content {
+    display: none;
+}
+
+.exam-tab-content.active {
+    display: block;
+    animation: fadeIn 0.3s ease;
+}
+
+.section-subtitle {
+    display: block;
+    font-size: 0.8rem;
+    color: var(--text-secondary);
+    font-weight: 400;
+    margin-top: 2px;
+}
+
+/* ===== ЕГЭ 1 ЧАСТЬ ===== */
+
+.ege-task-badge {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 16px;
+    padding: 8px 16px;
+    background: var(--card-bg);
+    border-radius: 10px;
+    border: 1px solid var(--border);
+    box-shadow: 0 2px 6px var(--shadow-light);
+}
+
+.ege-task-num {
+    background: var(--primary);
+    color: white;
+    width: 28px;
+    height: 28px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 700;
+    font-size: 0.85rem;
+    flex-shrink: 0;
+}
+
+.ege-task-title {
+    font-weight: 600;
+    font-size: 0.95rem;
+    color: var(--text);
+}
+
+.ege-question-text {
+    font-size: 1.05rem;
+    line-height: 1.8;
+    text-align: left;
+}
+
+/* Разбор результатов ЕГЭ */
+.ege-task-breakdown {
+    background: var(--card-bg);
+    border-radius: 14px;
+    padding: 16px;
+    margin-bottom: 20px;
+    box-shadow: 0 2px 6px var(--shadow-light);
+}
+
+.ege-task-result {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 10px 0;
+    border-bottom: 1px solid var(--border);
+}
+
+.ege-task-result:last-child {
+    border-bottom: none;
+}
+
+.ege-task-result-icon {
+    width: 24px;
+    height: 24px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 0.75rem;
+    font-weight: 700;
+    flex-shrink: 0;
+}
+
+.ege-task-result-icon.correct {
+    background: rgba(34, 197, 94, 0.15);
+    color: var(--success);
+}
+
+.ege-task-result-icon.wrong {
+    background: rgba(239, 68, 68, 0.15);
+    color: var(--error);
+}
+
+.ege-task-result-icon.skipped {
+    background: var(--bg);
+    color: var(--text-secondary);
+}
+
+.ege-task-result-name {
+    flex: 1;
+    font-size: 0.85rem;
+    color: var(--text);
+}
+
+.ege-task-result-answer {
+    font-size: 0.8rem;
+    color: var(--error);
+    font-weight: 600;
+}
+
+/* SVG Графики ЕГЭ */
+.ege-graph {
+    width: 100%;
+    max-width: 400px;
+    height: auto;
+    margin: 16px auto;
+    display: block;
+    background: var(--bg);
+    border-radius: 8px;
+    border: 1px solid var(--border);
+    padding: 8px;
+}
+
+.ege-graph .grid-line {
+    stroke: var(--border);
+    stroke-width: 0.5;
+}
+
+.ege-graph .axis-line {
+    stroke: var(--text);
+    stroke-width: 1.5;
+}
+
+.ege-graph .axis-arrow {
+    fill: var(--text);
+}
+
+.ege-graph .axis-label {
+    fill: var(--text-secondary);
+    font-size: 12px;
+    font-family: -apple-system, BlinkMacSystemFont, sans-serif;
+    font-style: italic;
+}
+
+.ege-graph .tick-label {
+    fill: var(--text-secondary);
+    font-size: 10px;
+    font-family: -apple-system, BlinkMacSystemFont, sans-serif;
+}
+
+.ege-graph .function-line {
+    stroke: var(--primary);
+    stroke-width: 2.5;
+    fill: none;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+}
+
+.ege-graph .point-marker {
+    fill: var(--error);
+}
+
+.ege-graph .point-label {
+    fill: var(--error);
+    font-size: 12px;
+    font-weight: 700;
+    font-family: -apple-system, BlinkMacSystemFont, sans-serif;
+}
+
+/* ===== ЭКЗАМЕН (МИНИ-ПРАКТИКА) ===== */
 
 .exam-setup-card {
     background: var(--card-bg);

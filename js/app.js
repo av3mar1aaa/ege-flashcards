@@ -91,9 +91,12 @@ const App = {
             dashboard: document.getElementById('dashboard-screen'),
             trainer: document.getElementById('trainer-screen'),
             trainerProblem: document.getElementById('trainer-problem-screen'),
+            examSubjects: document.getElementById('exam-subjects-screen'),
             examSetup: document.getElementById('exam-setup-screen'),
             exam: document.getElementById('exam-screen'),
-            examResult: document.getElementById('exam-result-screen')
+            examResult: document.getElementById('exam-result-screen'),
+            egeExam: document.getElementById('ege-exam-screen'),
+            egeResult: document.getElementById('ege-result-screen')
         };
 
         this.elements = {
@@ -946,24 +949,23 @@ const App = {
 
     // Показать все формулы алгебры
     showAlgebraFormulas(scrollToSection = null) {
-        // Создаём навигацию по разделам
-        let navHtml = '<div class="algebra-nav-pills">';
-        for (const [key, section] of Object.entries(ALGEBRA_FORMULAS)) {
-            navHtml += `<button class="algebra-nav-pill" data-section="${key}">${section.title}</button>`;
+        // Создаём навигацию-дропдаун
+        const entries = Object.entries(ALGEBRA_FORMULAS);
+        const firstTitle = entries[0][1].title;
+        let navHtml = `<div class="nav-dropdown">
+            <button class="nav-dropdown-toggle" aria-expanded="false">
+                <span class="nav-dropdown-label">${firstTitle}</span>
+                <svg class="nav-dropdown-arrow" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg>
+            </button>
+            <div class="nav-dropdown-menu hidden">`;
+        for (const [key, section] of entries) {
+            navHtml += `<button class="nav-dropdown-item" data-section="${key}">${section.title}</button>`;
         }
-        navHtml += '</div>';
+        navHtml += '</div></div>';
         this.elements.algebraFormulasNav.innerHTML = navHtml;
 
-        // Привязываем клики по навигации
-        document.querySelectorAll('.algebra-nav-pill').forEach(pill => {
-            pill.addEventListener('click', () => {
-                const sectionKey = pill.dataset.section;
-                const sectionEl = document.getElementById(`algebra-section-${sectionKey}`);
-                if (sectionEl) {
-                    sectionEl.scrollIntoView({ behavior: 'smooth', block: 'start' });
-                }
-            });
-        });
+        // Привязываем дропдаун
+        this._bindNavDropdown(this.elements.algebraFormulasNav, 'algebra-section-');
 
         // Создаём контент с формулами
         let html = '';
@@ -1013,24 +1015,23 @@ const App = {
 
     // Показать формулы планиметрии
     showPlanimetryFormulas(scrollToSection = null) {
-        // Создаём навигацию по разделам
-        let navHtml = '<div class="geometry-nav-pills">';
-        for (const [key, section] of Object.entries(PLANIMETRY_FORMULAS)) {
-            navHtml += `<button class="geometry-nav-pill" data-section="${key}">${section.title}</button>`;
+        // Создаём навигацию-дропдаун
+        const entries = Object.entries(PLANIMETRY_FORMULAS);
+        const firstTitle = entries[0][1].title;
+        let navHtml = `<div class="nav-dropdown">
+            <button class="nav-dropdown-toggle" aria-expanded="false">
+                <span class="nav-dropdown-label">${firstTitle}</span>
+                <svg class="nav-dropdown-arrow" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg>
+            </button>
+            <div class="nav-dropdown-menu hidden">`;
+        for (const [key, section] of entries) {
+            navHtml += `<button class="nav-dropdown-item" data-section="${key}">${section.title}</button>`;
         }
-        navHtml += '</div>';
+        navHtml += '</div></div>';
         this.elements.planimetryNav.innerHTML = navHtml;
 
-        // Привязываем клики по навигации
-        document.querySelectorAll('#planimetry-nav .geometry-nav-pill').forEach(pill => {
-            pill.addEventListener('click', () => {
-                const sectionKey = pill.dataset.section;
-                const sectionEl = document.getElementById(`planimetry-section-${sectionKey}`);
-                if (sectionEl) {
-                    sectionEl.scrollIntoView({ behavior: 'smooth', block: 'start' });
-                }
-            });
-        });
+        // Привязываем дропдаун
+        this._bindNavDropdown(this.elements.planimetryNav, 'planimetry-section-');
 
         // Создаём контент с формулами
         let html = '';
@@ -1066,24 +1067,23 @@ const App = {
 
     // Показать формулы стереометрии
     showStereometryFormulas(scrollToSection = null) {
-        // Создаём навигацию по разделам
-        let navHtml = '<div class="geometry-nav-pills">';
-        for (const [key, section] of Object.entries(STEREOMETRY_FORMULAS)) {
-            navHtml += `<button class="geometry-nav-pill" data-section="${key}">${section.title}</button>`;
+        // Создаём навигацию-дропдаун
+        const entries = Object.entries(STEREOMETRY_FORMULAS);
+        const firstTitle = entries[0][1].title;
+        let navHtml = `<div class="nav-dropdown">
+            <button class="nav-dropdown-toggle" aria-expanded="false">
+                <span class="nav-dropdown-label">${firstTitle}</span>
+                <svg class="nav-dropdown-arrow" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg>
+            </button>
+            <div class="nav-dropdown-menu hidden">`;
+        for (const [key, section] of entries) {
+            navHtml += `<button class="nav-dropdown-item" data-section="${key}">${section.title}</button>`;
         }
-        navHtml += '</div>';
+        navHtml += '</div></div>';
         this.elements.stereometryNav.innerHTML = navHtml;
 
-        // Привязываем клики по навигации
-        document.querySelectorAll('#stereometry-nav .geometry-nav-pill').forEach(pill => {
-            pill.addEventListener('click', () => {
-                const sectionKey = pill.dataset.section;
-                const sectionEl = document.getElementById(`stereometry-section-${sectionKey}`);
-                if (sectionEl) {
-                    sectionEl.scrollIntoView({ behavior: 'smooth', block: 'start' });
-                }
-            });
-        });
+        // Привязываем дропдаун
+        this._bindNavDropdown(this.elements.stereometryNav, 'stereometry-section-');
 
         // Создаём контент с формулами
         let html = '';
@@ -1115,6 +1115,44 @@ const App = {
                 }
             }, 100);
         }
+    },
+
+    /**
+     * Привязывает логику дропдаун-навигации для формул
+     */
+    _bindNavDropdown(navContainer, sectionPrefix) {
+        const toggle = navContainer.querySelector('.nav-dropdown-toggle');
+        const menu = navContainer.querySelector('.nav-dropdown-menu');
+        const label = navContainer.querySelector('.nav-dropdown-label');
+        const items = navContainer.querySelectorAll('.nav-dropdown-item');
+
+        toggle.addEventListener('click', () => {
+            const expanded = toggle.getAttribute('aria-expanded') === 'true';
+            toggle.setAttribute('aria-expanded', !expanded);
+            menu.classList.toggle('hidden');
+        });
+
+        items.forEach(item => {
+            item.addEventListener('click', () => {
+                const sectionKey = item.dataset.section;
+                label.textContent = item.textContent;
+                toggle.setAttribute('aria-expanded', 'false');
+                menu.classList.add('hidden');
+
+                const sectionEl = document.getElementById(`${sectionPrefix}${sectionKey}`);
+                if (sectionEl) {
+                    sectionEl.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                }
+            });
+        });
+
+        // Закрыть при клике вне
+        document.addEventListener('click', (e) => {
+            if (!navContainer.contains(e.target)) {
+                toggle.setAttribute('aria-expanded', 'false');
+                menu.classList.add('hidden');
+            }
+        });
     },
 
     // ===== ИСТОРИЯ БРАУЗЕРА =====
@@ -1359,7 +1397,7 @@ const App = {
                 const feature = card.dataset.feature;
                 if (feature === 'dashboard') this.showDashboard();
                 else if (feature === 'trainer') this.showTrainer();
-                else if (feature === 'exam') this.showExamSetup();
+                else if (feature === 'exam') this.showExamSubjects();
             });
         });
 
@@ -1388,8 +1426,25 @@ const App = {
             this.startTrainerProblem(Trainer.currentCategory);
         });
 
-        // Экзамен
-        document.getElementById('exam-setup-back-btn').addEventListener('click', () => this.showScreen('main'));
+        // Выбор предмета экзамена
+        document.getElementById('exam-subjects-back-btn').addEventListener('click', () => this.showScreen('main'));
+        document.getElementById('exam-mini-practice-btn').addEventListener('click', () => this.showExamSetup());
+        document.getElementById('exam-ege-part1-btn').addEventListener('click', () => this.startEgeExam());
+        document.getElementById('exam-ege-cs-part1-btn').addEventListener('click', () => this.startEgeCsExam());
+        document.getElementById('exam-ege-rus-part1-btn').addEventListener('click', () => this.startEgeRusExam());
+
+        document.querySelectorAll('.exam-tab').forEach(tab => {
+            tab.addEventListener('click', () => {
+                document.querySelectorAll('.exam-tab').forEach(t => t.classList.remove('active'));
+                document.querySelectorAll('.exam-tab-content').forEach(c => c.classList.remove('active'));
+                tab.classList.add('active');
+                const content = document.getElementById('exam-tab-' + tab.dataset.examTab);
+                if (content) content.classList.add('active');
+            });
+        });
+
+        // Мини-практика (бывший экзамен)
+        document.getElementById('exam-setup-back-btn').addEventListener('click', () => this.showExamSubjects());
         document.getElementById('exam-start-btn').addEventListener('click', () => this.startExam());
         document.getElementById('exam-prev-btn').addEventListener('click', () => this.examPrev());
         document.getElementById('exam-next-btn').addEventListener('click', () => this.examNext());
@@ -1398,6 +1453,15 @@ const App = {
             if (e.key === 'Enter') this.examNext();
         });
         document.getElementById('exam-result-home-btn').addEventListener('click', () => this.showScreen('main'));
+
+        // ЕГЭ 1 часть
+        document.getElementById('ege-prev-btn').addEventListener('click', () => this.egePrev());
+        document.getElementById('ege-next-btn').addEventListener('click', () => this.egeNext());
+        document.getElementById('ege-finish-btn').addEventListener('click', () => this.finishEgeExam());
+        document.getElementById('ege-answer').addEventListener('keypress', (e) => {
+            if (e.key === 'Enter') this.egeNext();
+        });
+        document.getElementById('ege-result-home-btn').addEventListener('click', () => this.showScreen('main'));
     },
 
     // ===== ДАШБОРД =====
@@ -1482,7 +1546,13 @@ const App = {
         }
     },
 
-    // ===== ЭКЗАМЕН =====
+    // ===== ЭКЗАМЕН: ВЫБОР ПРЕДМЕТА =====
+
+    showExamSubjects() {
+        this.showScreen('examSubjects');
+    },
+
+    // ===== МИНИ-ПРАКТИКА =====
 
     showExamSetup() {
         this.showScreen('examSetup');
@@ -1592,6 +1662,133 @@ const App = {
         document.getElementById('exam-weak-topics').innerHTML = weakHtml;
 
         this.showScreen('examResult');
+    },
+
+    // ===== ЕГЭ 1 ЧАСТЬ =====
+
+    startEgeExam() {
+        EgeExam.start(60, typeof EGE_MATH_TASKS !== 'undefined' ? EGE_MATH_TASKS : [], 'ege-math');
+        document.getElementById('ege-total-q').textContent = EgeExam.problems.length;
+        this.renderEgeQuestion();
+        this.renderEgeMap();
+        this.showScreen('egeExam');
+    },
+
+    startEgeCsExam() {
+        EgeExam.start(235, typeof EGE_CS_TASKS !== 'undefined' ? EGE_CS_TASKS : [], 'ege-cs');
+        document.getElementById('ege-total-q').textContent = EgeExam.problems.length;
+        this.renderEgeQuestion();
+        this.renderEgeMap();
+        this.showScreen('egeExam');
+    },
+
+    startEgeRusExam() {
+        EgeExam.start(210, typeof EGE_RUS_TASKS !== 'undefined' ? EGE_RUS_TASKS : [], 'ege-rus');
+        document.getElementById('ege-total-q').textContent = EgeExam.problems.length;
+        this.renderEgeQuestion();
+        this.renderEgeMap();
+        this.showScreen('egeExam');
+    },
+
+    renderEgeQuestion() {
+        const p = EgeExam.getCurrentProblem();
+        if (!p) return;
+
+        let html = '<div class="ege-question-text">' + p.text + '</div>';
+
+        // Если есть график (задание 11), рендерим SVG
+        if (p.graph && typeof EgeSvgGraph !== 'undefined') {
+            html += EgeSvgGraph.render(p.graph);
+        }
+
+        document.getElementById('ege-question').innerHTML = html;
+        document.getElementById('ege-current-q').textContent = EgeExam.currentIndex + 1;
+        document.getElementById('ege-task-num').textContent = p.taskId;
+        document.getElementById('ege-task-title').textContent = p.taskTitle;
+
+        // Восстановить предыдущий ответ
+        document.getElementById('ege-answer').value = EgeExam.answers[EgeExam.currentIndex] || '';
+
+        // Кнопки навигации
+        document.getElementById('ege-prev-btn').disabled = EgeExam.currentIndex === 0;
+        document.getElementById('ege-next-btn').textContent =
+            EgeExam.currentIndex === EgeExam.problems.length - 1 ? 'Завершить' : 'Далее →';
+
+        this.renderEgeMap();
+        this.renderMath();
+        document.getElementById('ege-answer').focus();
+    },
+
+    renderEgeMap() {
+        const container = document.getElementById('ege-question-map');
+        let html = '';
+        EgeExam.problems.forEach((_, i) => {
+            const classes = ['exam-q-dot'];
+            if (i === EgeExam.currentIndex) classes.push('current');
+            if (EgeExam.answers[i]) classes.push('answered');
+            html += '<div class="' + classes.join(' ') + '" data-ege-q="' + i + '">' + (i + 1) + '</div>';
+        });
+        container.innerHTML = html;
+
+        container.querySelectorAll('.exam-q-dot').forEach(dot => {
+            dot.addEventListener('click', () => {
+                EgeExam.saveAnswer(document.getElementById('ege-answer').value);
+                EgeExam.goTo(parseInt(dot.dataset.egeQ));
+                this.renderEgeQuestion();
+            });
+        });
+    },
+
+    egeNext() {
+        EgeExam.saveAnswer(document.getElementById('ege-answer').value);
+
+        if (EgeExam.currentIndex === EgeExam.problems.length - 1) {
+            this.finishEgeExam();
+            return;
+        }
+
+        EgeExam.next();
+        this.renderEgeQuestion();
+    },
+
+    egePrev() {
+        EgeExam.saveAnswer(document.getElementById('ege-answer').value);
+        EgeExam.prev();
+        this.renderEgeQuestion();
+    },
+
+    finishEgeExam() {
+        if (!EgeExam.isRunning) return;
+
+        EgeExam.saveAnswer(document.getElementById('ege-answer').value);
+        const result = EgeExam.finish();
+
+        // Оценка
+        document.getElementById('ege-result-grade').textContent = result.grade.grade;
+        document.getElementById('ege-result-grade').style.background = result.grade.color;
+        document.getElementById('ege-result-label').textContent = result.grade.label;
+        document.getElementById('ege-result-label').style.color = result.grade.color;
+        document.getElementById('ege-result-percent').textContent = result.percentage + '%';
+        document.getElementById('ege-result-correct').textContent = result.correct;
+        document.getElementById('ege-result-wrong').textContent = result.wrong + result.unanswered;
+        document.getElementById('ege-result-time').textContent = EgeExam.formatTime(result.timeSpent);
+
+        // Разбор по заданиям
+        let breakdownHtml = '<h3 class="dash-section-title" style="margin-bottom:12px">Разбор по заданиям</h3>';
+        result.taskResults.forEach(tr => {
+            const iconClass = tr.status === 'correct' ? 'correct' : tr.status === 'wrong' ? 'wrong' : 'skipped';
+            const icon = tr.status === 'correct' ? '✓' : tr.status === 'wrong' ? '✗' : '—';
+            breakdownHtml += '<div class="ege-task-result">';
+            breakdownHtml += '<div class="ege-task-result-icon ' + iconClass + '">' + icon + '</div>';
+            breakdownHtml += '<span class="ege-task-result-name">Задание ' + tr.taskId + '. ' + tr.taskTitle + '</span>';
+            if (tr.status === 'wrong') {
+                breakdownHtml += '<span class="ege-task-result-answer" title="Ваш ответ: ' + tr.userAnswer + '">✗ ' + tr.correctAnswer + '</span>';
+            }
+            breakdownHtml += '</div>';
+        });
+        document.getElementById('ege-task-breakdown').innerHTML = breakdownHtml;
+
+        this.showScreen('egeResult');
     },
 
     // ===== PWA =====

@@ -767,7 +767,64 @@
 
         <!-- ===== РЕЖИМ ЭКЗАМЕНА ===== -->
 
-        <!-- Настройка экзамена -->
+        <!-- Выбор предмета для экзамена -->
+        <div id="exam-subjects-screen" class="screen">
+            <h1>Экзамен</h1>
+            <p class="subtitle">Выберите предмет</p>
+
+            <div class="exam-tabs" id="exam-tabs">
+                <button class="exam-tab active" data-exam-tab="math">Математика</button>
+                <button class="exam-tab" data-exam-tab="cs">Информатика</button>
+                <button class="exam-tab" data-exam-tab="russian">Русский</button>
+            </div>
+
+            <div class="exam-tab-content active" id="exam-tab-math">
+                <div class="sections-grid">
+                    <div class="section-card" id="exam-mini-practice-btn">
+                        <span class="section-icon">🎯</span>
+                        <div>
+                            <span class="section-title">Мини-практика</span>
+                            <span class="section-subtitle">Быстрая тренировка по темам</span>
+                        </div>
+                    </div>
+                    <div class="section-card" id="exam-ege-part1-btn">
+                        <span class="section-icon">📋</span>
+                        <div>
+                            <span class="section-title">1 часть ЕГЭ</span>
+                            <span class="section-subtitle">12 заданий профильного уровня</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="exam-tab-content" id="exam-tab-cs">
+                <div class="sections-grid">
+                    <div class="section-card" id="exam-ege-cs-part1-btn">
+                        <span class="section-icon">💻</span>
+                        <div>
+                            <span class="section-title">1 часть ЕГЭ</span>
+                            <span class="section-subtitle">16 заданий по информатике</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="exam-tab-content" id="exam-tab-russian">
+                <div class="sections-grid">
+                    <div class="section-card" id="exam-ege-rus-part1-btn">
+                        <span class="section-icon">📝</span>
+                        <div>
+                            <span class="section-title">1 часть ЕГЭ</span>
+                            <span class="section-subtitle">17 заданий по русскому языку</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <button id="exam-subjects-back-btn" class="btn btn-link">← Назад</button>
+        </div>
+
+        <!-- Настройка мини-практики -->
         <div id="exam-setup-screen" class="screen">
             <h1>Экзамен</h1>
             <p class="subtitle">Имитация реального ЕГЭ</p>
@@ -863,6 +920,76 @@
 
             <button id="exam-result-home-btn" class="btn btn-primary">На главную</button>
         </div>
+
+        <!-- ===== ЕГЭ 1 ЧАСТЬ ===== -->
+
+        <!-- Экран экзамена ЕГЭ -->
+        <div id="ege-exam-screen" class="screen">
+            <div class="exam-header">
+                <div class="exam-timer-bar">
+                    <div class="exam-timer-progress" id="ege-timer-progress"></div>
+                </div>
+                <div class="exam-info">
+                    <span class="exam-timer" id="ege-timer">60:00</span>
+                    <span class="exam-progress-text">
+                        Задание <span id="ege-current-q">1</span> / <span id="ege-total-q">12</span>
+                    </span>
+                </div>
+            </div>
+
+            <div class="ege-task-badge" id="ege-task-badge">
+                <span class="ege-task-num" id="ege-task-num">1</span>
+                <span class="ege-task-title" id="ege-task-title">Планиметрия</span>
+            </div>
+
+            <div class="card exam-card">
+                <div class="card-question" id="ege-question"></div>
+            </div>
+
+            <div class="answer-section">
+                <input type="text" id="ege-answer" class="trainer-input" placeholder="Введите ответ..." autocomplete="off">
+            </div>
+
+            <div class="exam-nav">
+                <button id="ege-prev-btn" class="btn btn-secondary" disabled>← Назад</button>
+                <button id="ege-next-btn" class="btn btn-primary">Далее →</button>
+            </div>
+
+            <div class="exam-question-map" id="ege-question-map"></div>
+
+            <button id="ege-finish-btn" class="btn btn-link" style="color: var(--error);">Завершить экзамен</button>
+        </div>
+
+        <!-- Результат ЕГЭ 1 часть -->
+        <div id="ege-result-screen" class="screen">
+            <div class="exam-result-header">
+                <div class="exam-result-grade" id="ege-result-grade">5</div>
+                <h2 id="ege-result-label">Отлично!</h2>
+            </div>
+
+            <div class="exam-result-stats">
+                <div class="exam-result-stat">
+                    <span class="exam-result-stat-value" id="ege-result-percent">0%</span>
+                    <span class="exam-result-stat-label">результат</span>
+                </div>
+                <div class="exam-result-stat">
+                    <span class="exam-result-stat-value exam-correct-val" id="ege-result-correct">0</span>
+                    <span class="exam-result-stat-label">верно</span>
+                </div>
+                <div class="exam-result-stat">
+                    <span class="exam-result-stat-value exam-wrong-val" id="ege-result-wrong">0</span>
+                    <span class="exam-result-stat-label">ошибок</span>
+                </div>
+                <div class="exam-result-stat">
+                    <span class="exam-result-stat-value" id="ege-result-time">0:00</span>
+                    <span class="exam-result-stat-label">время</span>
+                </div>
+            </div>
+
+            <div class="ege-task-breakdown" id="ege-task-breakdown"></div>
+
+            <button id="ege-result-home-btn" class="btn btn-primary">На главную</button>
+        </div>
     </div>
 
     <script src="js/cards.js"></script>
@@ -876,6 +1003,22 @@
     <script src="js/dashboard.js"></script>
     <script src="js/trainer.js"></script>
     <script src="js/exam.js"></script>
+    <script src="js/ege-svg-graph.js"></script>
+    <script src="js/ege-math-data.js"></script>
+    <script src="js/ege-cs-data.js"></script>
+    <script src="js/ege-rus-data-part1.js"></script>
+    <script src="js/ege-rus-data-part2.js"></script>
+    <script src="js/ege-rus-data-part3.js"></script>
+    <script src="js/ege-rus-data-part4.js"></script>
+    <script>
+        const EGE_RUS_TASKS = [
+            ...EGE_RUS_TASKS_PART1,
+            ...EGE_RUS_TASKS_PART2,
+            ...EGE_RUS_TASKS_PART3,
+            ...EGE_RUS_TASKS_PART4
+        ];
+    </script>
+    <script src="js/ege-exam.js"></script>
     <script src="js/search.js"></script>
     <script src="js/firebase-config.js"></script>
     <script src="js/cloud-storage.js"></script>
