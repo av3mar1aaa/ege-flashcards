@@ -34,8 +34,18 @@ const App = {
         this.bindEvents();
         this.bindRussianEvents();
         this.bindCSEvents();
+        this.bindSettingsEvents();
+        this.bindNewFeatureEvents();
+        this.initTheme();
+        this.initHistory();
         this.loadData();
         this.updateStats();
+
+        // Инициализация поиска, PWA и авторизации
+        Search.init();
+        Search.bindEvents();
+        this.initPWA();
+        Auth.init();
 
         // Показать главный экран с декорациями
         this.showScreen('main');
@@ -76,7 +86,14 @@ const App = {
             // Геометрия
             geometry: document.getElementById('geometry-screen'),
             planimetry: document.getElementById('planimetry-screen'),
-            stereometry: document.getElementById('stereometry-screen')
+            stereometry: document.getElementById('stereometry-screen'),
+            // Новые фичи
+            dashboard: document.getElementById('dashboard-screen'),
+            trainer: document.getElementById('trainer-screen'),
+            trainerProblem: document.getElementById('trainer-problem-screen'),
+            examSetup: document.getElementById('exam-setup-screen'),
+            exam: document.getElementById('exam-screen'),
+            examResult: document.getElementById('exam-result-screen')
         };
 
         this.elements = {
@@ -339,6 +356,9 @@ const App = {
     },
 
     // Показать экран
+    /** @type {boolean} Флаг для предотвращения pushState при popstate */
+    _isRestoringState: false,
+
     showScreen(screenName, decorationType = null) {
         Object.values(this.screens).forEach(screen => {
             screen.classList.remove('active');
@@ -349,6 +369,12 @@ const App = {
         const decType = decorationType || screenName;
         if (typeof updateDecorations === 'function') {
             updateDecorations(decType);
+        }
+
+        // Записываем в историю браузера (кроме восстановления из popstate)
+        if (!this._isRestoringState) {
+            const state = { screen: screenName, decorationType: decType };
+            history.pushState(state, '', `#${screenName}`);
         }
     },
 
@@ -376,8 +402,10 @@ const App = {
 
     // Начать сессию
     startSession() {
-        // Берём все карточки и перемешиваем в случайном порядке
-        this.dueCards = this.cardStates.slice().sort(() => Math.random() - 0.5);
+        // Берём карточки, перемешиваем и ограничиваем по настройке
+        this.dueCards = this.cardStates.slice()
+            .sort(() => Math.random() - 0.5)
+            .slice(0, this.cardsPerSession);
 
         this.currentIndex = 0;
         this.sessionCorrect = 0;
@@ -548,6 +576,7 @@ const App = {
     showComplete() {
         this.elements.sessionCorrect.textContent = this.sessionCorrect;
         this.elements.sessionWrong.textContent = this.sessionWrong;
+        Stats.logSession('trig', this.sessionCorrect, this.sessionWrong);
         this.showScreen('complete');
     },
 
@@ -763,6 +792,7 @@ const App = {
     showRussianComplete() {
         this.elements.russianSessionCorrect.textContent = this.russianSessionCorrect;
         this.elements.russianSessionWrong.textContent = this.russianSessionWrong;
+        Stats.logSession('russian', this.russianSessionCorrect, this.russianSessionWrong);
         this.showScreen('russianComplete', 'russian');
     },
 
@@ -1084,6 +1114,491 @@ const App = {
                     sectionEl.scrollIntoView({ behavior: 'smooth', block: 'start' });
                 }
             }, 100);
+        }
+    },
+
+    // ===== ИСТОРИЯ БРАУЗЕРА =====
+
+    /**
+     * Инициализирует поддержку навигации браузера (назад/вперёд)
+     */
+    initHistory() {
+        // Заменяем начальное состояние (без добавления в историю)
+        history.replaceState({ screen: 'main', decorationType: 'main' }, '', '#main');
+
+        // Слушаем нажатие кнопок назад/вперёд
+        window.addEventListener('popstate', (e) => {
+            if (e.state && e.state.screen && this.screens[e.state.screen]) {
+                this._isRestoringState = true;
+                this.showScreen(e.state.screen, e.state.decorationType);
+                this._isRestoringState = false;
+            }
+        });
+    },
+
+    // ===== НАСТРОЙКИ И ТЕМА =====
+
+    /** @type {number} Количество карточек за сессию */
+    cardsPerSession: 20,
+
+    /**
+     * Инициализирует все настройки при загрузке
+     */
+    initTheme() {
+        // Тема
+        const savedTheme = Storage.loadPreference('theme');
+        if (savedTheme) {
+            document.documentElement.dataset.theme = savedTheme;
+            if (savedTheme === 'dark') {
+                document.getElementById('theme-toggle').checked = true;
+            }
+        } else if (window.matchMedia('(prefers-color-scheme: dark)').matches) {
+            document.documentElement.dataset.theme = 'dark';
+            document.getElementById('theme-toggle').checked = true;
+        }
+
+        // Размер шрифта
+        const savedFontSize = Storage.loadPreference('fontSize', 'normal');
+        this.setFontSize(savedFontSize, false);
+
+        // Карточек за сессию
+        const savedCards = Storage.loadPreference('cardsPerSession', 20);
+        this.cardsPerSession = savedCards;
+        document.getElementById('cards-per-session').value = savedCards;
+
+        // Анимации
+        const savedAnimations = Storage.loadPreference('animations', true);
+        document.getElementById('animations-toggle').checked = savedAnimations;
+        if (!savedAnimations) {
+            document.documentElement.dataset.animations = 'off';
+        }
+    },
+
+    /**
+     * Переключает тему между light и dark
+     */
+    toggleTheme() {
+        const isDark = document.documentElement.dataset.theme === 'dark';
+        const newTheme = isDark ? 'light' : 'dark';
+        document.documentElement.dataset.theme = newTheme;
+        document.getElementById('theme-toggle').checked = !isDark;
+        Storage.savePreference('theme', newTheme);
+    },
+
+    /**
+     * Устанавливает размер шрифта
+     * @param {string} size - 'small' | 'normal' | 'large'
+     * @param {boolean} save - Сохранять ли в localStorage
+     */
+    setFontSize(size, save = true) {
+        // Обновить атрибут на html
+        if (size === 'normal') {
+            delete document.documentElement.dataset.fontSize;
+        } else {
+            document.documentElement.dataset.fontSize = size;
+        }
+
+        // Обновить активную кнопку
+        document.querySelectorAll('.font-size-btn').forEach(btn => {
+            btn.classList.toggle('active', btn.dataset.size === size);
+        });
+
+        if (save) {
+            Storage.savePreference('fontSize', size);
+        }
+    },
+
+    /**
+     * Экспортирует данные в JSON файл
+     */
+    exportData() {
+        const data = {
+            version: 2,
+            exportDate: new Date().toISOString(),
+            cardStates: Storage.loadCardStates(),
+            preferences: Storage.loadPreferences(),
+            activityLog: Stats.getLog()
+        };
+        const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = `ege-progress-${new Date().toISOString().split('T')[0]}.json`;
+        a.click();
+        URL.revokeObjectURL(url);
+    },
+
+    /**
+     * Импортирует данные из JSON файла
+     */
+    importData() {
+        const input = document.createElement('input');
+        input.type = 'file';
+        input.accept = '.json';
+        input.onchange = (e) => {
+            const file = e.target.files[0];
+            if (!file) return;
+            const reader = new FileReader();
+            reader.onload = () => {
+                try {
+                    const data = JSON.parse(reader.result);
+                    if (data.cardStates && Array.isArray(data.cardStates)) {
+                        Storage.saveCardStates(data.cardStates);
+                    }
+                    if (data.preferences && typeof data.preferences === 'object') {
+                        Object.entries(data.preferences).forEach(([key, value]) => {
+                            Storage.savePreference(key, value);
+                        });
+                    }
+                    if (data.activityLog && Array.isArray(data.activityLog)) {
+                        localStorage.setItem('ege_activity_log', JSON.stringify(data.activityLog));
+                    }
+                    alert('Данные успешно импортированы!');
+                    location.reload();
+                } catch (err) {
+                    alert('Ошибка: файл повреждён или имеет неверный формат.');
+                }
+            };
+            reader.readAsText(file);
+        };
+        input.click();
+    },
+
+    /**
+     * Сбрасывает весь прогресс обучения
+     */
+    resetAllProgress() {
+        if (confirm('Вы уверены? Весь прогресс обучения будет удалён. Это действие нельзя отменить.')) {
+            Storage.resetProgress();
+            localStorage.removeItem('ege_session_history');
+            localStorage.removeItem('ege_activity_log');
+            CloudStorage.deleteCloudData();
+            alert('Прогресс сброшен.');
+            location.reload();
+        }
+    },
+
+    /**
+     * Открывает панель настроек
+     */
+    openSettings() {
+        document.getElementById('settings-overlay').classList.remove('hidden');
+    },
+
+    /**
+     * Закрывает панель настроек
+     */
+    closeSettings() {
+        document.getElementById('settings-overlay').classList.add('hidden');
+    },
+
+    /**
+     * Привязывает события для настроек
+     */
+    bindSettingsEvents() {
+        // Открытие / закрытие
+        document.getElementById('settings-btn').addEventListener('click', () => this.openSettings());
+        document.getElementById('settings-close-btn').addEventListener('click', () => this.closeSettings());
+
+        // Тёмная тема
+        document.getElementById('theme-toggle').addEventListener('change', () => this.toggleTheme());
+
+        // Размер шрифта
+        document.querySelectorAll('.font-size-btn').forEach(btn => {
+            btn.addEventListener('click', () => this.setFontSize(btn.dataset.size));
+        });
+
+        // Карточек за сессию
+        document.getElementById('cards-per-session').addEventListener('change', (e) => {
+            this.cardsPerSession = parseInt(e.target.value);
+            Storage.savePreference('cardsPerSession', this.cardsPerSession);
+        });
+
+        // Анимации
+        document.getElementById('animations-toggle').addEventListener('change', (e) => {
+            const enabled = e.target.checked;
+            if (enabled) {
+                delete document.documentElement.dataset.animations;
+            } else {
+                document.documentElement.dataset.animations = 'off';
+            }
+            Storage.savePreference('animations', enabled);
+        });
+
+        // Экспорт / Импорт
+        document.getElementById('export-data-btn').addEventListener('click', () => this.exportData());
+        document.getElementById('import-data-btn').addEventListener('click', () => this.importData());
+
+        // Сброс прогресса
+        document.getElementById('reset-progress-btn').addEventListener('click', () => this.resetAllProgress());
+
+        // Закрытие по клику на оверлей
+        document.getElementById('settings-overlay').addEventListener('click', (e) => {
+            if (e.target.id === 'settings-overlay') {
+                this.closeSettings();
+            }
+        });
+
+        // Закрытие по Escape
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape' && !document.getElementById('settings-overlay').classList.contains('hidden')) {
+                this.closeSettings();
+            }
+        });
+    },
+
+    // ===== НОВЫЕ ФИЧИ =====
+
+    /**
+     * Привязывает события для новых фич
+     */
+    bindNewFeatureEvents() {
+        // Карточки фич на главной
+        document.querySelectorAll('.feature-card').forEach(card => {
+            card.addEventListener('click', () => {
+                const feature = card.dataset.feature;
+                if (feature === 'dashboard') this.showDashboard();
+                else if (feature === 'trainer') this.showTrainer();
+                else if (feature === 'exam') this.showExamSetup();
+            });
+        });
+
+        // Кнопка поиска
+        document.getElementById('search-hint-btn').addEventListener('click', () => Search.open());
+
+        // Дашборд
+        document.getElementById('dashboard-back-btn').addEventListener('click', () => this.showScreen('main'));
+
+        // Тренажёр
+        document.getElementById('trainer-back-btn').addEventListener('click', () => this.showScreen('main'));
+        document.getElementById('trainer-problem-back-btn').addEventListener('click', () => this.showTrainer());
+
+        document.querySelectorAll('[data-trainer]').forEach(card => {
+            card.addEventListener('click', () => {
+                this.startTrainerProblem(card.dataset.trainer);
+            });
+        });
+
+        document.getElementById('trainer-check-btn').addEventListener('click', () => this.checkTrainerAnswer());
+        document.getElementById('trainer-answer').addEventListener('keypress', (e) => {
+            if (e.key === 'Enter') this.checkTrainerAnswer();
+        });
+        document.getElementById('trainer-hint-btn').addEventListener('click', () => this.showTrainerHint());
+        document.getElementById('trainer-next-btn').addEventListener('click', () => {
+            this.startTrainerProblem(Trainer.currentCategory);
+        });
+
+        // Экзамен
+        document.getElementById('exam-setup-back-btn').addEventListener('click', () => this.showScreen('main'));
+        document.getElementById('exam-start-btn').addEventListener('click', () => this.startExam());
+        document.getElementById('exam-prev-btn').addEventListener('click', () => this.examPrev());
+        document.getElementById('exam-next-btn').addEventListener('click', () => this.examNext());
+        document.getElementById('exam-finish-btn').addEventListener('click', () => this.finishExam());
+        document.getElementById('exam-answer').addEventListener('keypress', (e) => {
+            if (e.key === 'Enter') this.examNext();
+        });
+        document.getElementById('exam-result-home-btn').addEventListener('click', () => this.showScreen('main'));
+    },
+
+    // ===== ДАШБОРД =====
+
+    showDashboard() {
+        Dashboard.render();
+        this.showScreen('dashboard');
+    },
+
+    // ===== ТРЕНАЖЁР =====
+
+    showTrainer() {
+        document.getElementById('trainer-correct-count').textContent = Trainer.score.correct;
+        document.getElementById('trainer-wrong-count').textContent = Trainer.score.wrong;
+        this.showScreen('trainer');
+    },
+
+    startTrainerProblem(categoryId) {
+        const problem = Trainer.generate(categoryId);
+        if (!problem) return;
+
+        const categoryNames = { trig: 'Тригонометрия', geometry: 'Геометрия', algebra: 'Алгебра', cs: 'Информатика' };
+        document.getElementById('trainer-category-badge').textContent = categoryNames[categoryId] || categoryId;
+        document.getElementById('trainer-mini-correct').textContent = Trainer.score.correct;
+        document.getElementById('trainer-mini-wrong').textContent = Trainer.score.wrong;
+
+        document.getElementById('trainer-question').innerHTML = problem.question;
+        document.getElementById('trainer-answer').value = '';
+        document.getElementById('trainer-hint').classList.add('hidden');
+        document.getElementById('trainer-feedback').classList.add('hidden');
+        document.getElementById('trainer-feedback').classList.remove('correct', 'wrong');
+
+        // Показать секцию ввода, скрыть фидбек
+        document.querySelector('#trainer-problem-screen .answer-section').style.display = 'block';
+        document.getElementById('trainer-hint-btn').style.display = 'block';
+
+        this.showScreen('trainerProblem');
+        this.renderMath();
+        document.getElementById('trainer-answer').focus();
+    },
+
+    checkTrainerAnswer() {
+        const answer = document.getElementById('trainer-answer').value;
+        if (!answer.trim()) return;
+
+        const result = Trainer.checkAnswer(answer);
+
+        const feedback = document.getElementById('trainer-feedback');
+        feedback.classList.remove('hidden', 'correct', 'wrong');
+        feedback.classList.add(result.correct ? 'correct' : 'wrong');
+
+        document.getElementById('trainer-feedback-icon').textContent = result.correct ? '✓' : '✗';
+        document.getElementById('trainer-feedback-text').textContent = result.correct ? 'Правильно!' : 'Неправильно';
+        document.getElementById('trainer-explanation').innerHTML = result.explanation;
+
+        if (!result.correct) {
+            document.getElementById('trainer-explanation').innerHTML += `<br><strong>Правильный ответ:</strong> ${result.correctAnswer}`;
+        }
+
+        // Обновить мини-счёт
+        document.getElementById('trainer-mini-correct').textContent = Trainer.score.correct;
+        document.getElementById('trainer-mini-wrong').textContent = Trainer.score.wrong;
+
+        // Скрыть ввод и подсказку
+        document.querySelector('#trainer-problem-screen .answer-section').style.display = 'none';
+        document.getElementById('trainer-hint-btn').style.display = 'none';
+
+        this.renderMath();
+
+        // Логируем сессию каждые 5 ответов
+        const total = Trainer.score.correct + Trainer.score.wrong;
+        if (total > 0 && total % 5 === 0) {
+            Stats.logSession('trainer', Trainer.score.correct, Trainer.score.wrong);
+            Trainer.resetScore();
+        }
+    },
+
+    showTrainerHint() {
+        if (Trainer.currentProblem && Trainer.currentProblem.hint) {
+            document.getElementById('trainer-hint-text').textContent = Trainer.currentProblem.hint;
+            document.getElementById('trainer-hint').classList.remove('hidden');
+        }
+    },
+
+    // ===== ЭКЗАМЕН =====
+
+    showExamSetup() {
+        this.showScreen('examSetup');
+    },
+
+    startExam() {
+        const questionCount = parseInt(document.getElementById('exam-question-count').value);
+        const time = parseInt(document.getElementById('exam-time').value);
+
+        Exam.start(questionCount, time);
+
+        document.getElementById('exam-total-q').textContent = questionCount;
+
+        this.renderExamQuestion();
+        this.renderExamMap();
+        this.showScreen('exam');
+    },
+
+    renderExamQuestion() {
+        const q = Exam.getCurrentQuestion();
+        document.getElementById('exam-question').innerHTML = q.question;
+        document.getElementById('exam-current-q').textContent = Exam.currentIndex + 1;
+
+        // Восстановить предыдущий ответ
+        const prevAnswer = Exam.answers[Exam.currentIndex];
+        document.getElementById('exam-answer').value = prevAnswer || '';
+
+        // Обновить кнопки навигации
+        document.getElementById('exam-prev-btn').disabled = Exam.currentIndex === 0;
+        document.getElementById('exam-next-btn').textContent =
+            Exam.currentIndex === Exam.questions.length - 1 ? 'Завершить' : 'Далее →';
+
+        this.renderExamMap();
+        this.renderMath();
+        document.getElementById('exam-answer').focus();
+    },
+
+    renderExamMap() {
+        const container = document.getElementById('exam-question-map');
+        let html = '';
+        Exam.questions.forEach((_, i) => {
+            const classes = ['exam-q-dot'];
+            if (i === Exam.currentIndex) classes.push('current');
+            if (Exam.answers[i]) classes.push('answered');
+            html += `<div class="${classes.join(' ')}" data-exam-q="${i}">${i + 1}</div>`;
+        });
+        container.innerHTML = html;
+
+        container.querySelectorAll('.exam-q-dot').forEach(dot => {
+            dot.addEventListener('click', () => {
+                // Сохранить текущий ответ
+                Exam.saveAnswer(document.getElementById('exam-answer').value);
+                Exam.goTo(parseInt(dot.dataset.examQ));
+                this.renderExamQuestion();
+            });
+        });
+    },
+
+    examNext() {
+        Exam.saveAnswer(document.getElementById('exam-answer').value);
+
+        if (Exam.currentIndex === Exam.questions.length - 1) {
+            this.finishExam();
+            return;
+        }
+
+        Exam.next();
+        this.renderExamQuestion();
+    },
+
+    examPrev() {
+        Exam.saveAnswer(document.getElementById('exam-answer').value);
+        Exam.prev();
+        this.renderExamQuestion();
+    },
+
+    finishExam() {
+        if (!Exam.isRunning) return;
+
+        Exam.saveAnswer(document.getElementById('exam-answer').value);
+        const result = Exam.finish();
+
+        // Отрисовать результат
+        document.getElementById('exam-result-grade').textContent = result.grade.grade;
+        document.getElementById('exam-result-grade').style.background = result.grade.color;
+        document.getElementById('exam-result-label').textContent = result.grade.label;
+        document.getElementById('exam-result-label').style.color = result.grade.color;
+        document.getElementById('exam-result-percent').textContent = result.percentage + '%';
+        document.getElementById('exam-result-correct').textContent = result.correct;
+        document.getElementById('exam-result-wrong').textContent = result.wrong + result.unanswered;
+        document.getElementById('exam-result-time').textContent = Exam.formatTime(result.timeSpent);
+
+        // Слабые темы
+        const catNames = { trig: 'Тригонометрия', geometry: 'Геометрия', algebra: 'Алгебра', cs: 'Информатика' };
+        let weakHtml = '<h3 class="dash-section-title" style="margin-bottom:8px">По предметам</h3>';
+        for (const [cat, data] of Object.entries(result.categoryResults)) {
+            const percent = data.total > 0 ? Math.round((data.correct / data.total) * 100) : 0;
+            const color = percent >= 70 ? 'var(--success)' : percent >= 50 ? '#f59e0b' : 'var(--error)';
+            weakHtml += `
+                <div class="exam-weak-topic">
+                    <span class="exam-weak-name">${catNames[cat] || cat}</span>
+                    <div class="exam-weak-bar"><div class="exam-weak-fill" style="width:${percent}%;background:${color}"></div></div>
+                    <span class="exam-weak-percent" style="color:${color}">${percent}%</span>
+                </div>
+            `;
+        }
+        document.getElementById('exam-weak-topics').innerHTML = weakHtml;
+
+        this.showScreen('examResult');
+    },
+
+    // ===== PWA =====
+
+    initPWA() {
+        if ('serviceWorker' in navigator) {
+            navigator.serviceWorker.register('./sw.js').catch(() => {});
         }
     }
 };

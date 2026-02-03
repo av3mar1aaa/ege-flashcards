@@ -88,6 +88,7 @@ const Storage = {
         }
 
         this.saveCardStates(allStates);
+        CloudStorage.saveToCloud();
     },
 
     /**
@@ -124,5 +125,45 @@ const Storage = {
             console.error('Ошибка импорта данных:', e);
         }
         return false;
+    },
+
+    /**
+     * Сохраняет пользовательскую настройку
+     * @param {string} key - Ключ настройки
+     * @param {*} value - Значение настройки
+     */
+    savePreference(key, value) {
+        try {
+            const prefs = this.loadPreferences();
+            prefs[key] = value;
+            localStorage.setItem('ege_preferences', JSON.stringify(prefs));
+        } catch (e) {
+            console.error('Ошибка сохранения настройки:', e);
+        }
+    },
+
+    /**
+     * Загружает пользовательскую настройку
+     * @param {string} key - Ключ настройки
+     * @param {*} defaultValue - Значение по умолчанию
+     * @returns {*} Значение настройки или defaultValue
+     */
+    loadPreference(key, defaultValue = null) {
+        const prefs = this.loadPreferences();
+        return prefs[key] !== undefined ? prefs[key] : defaultValue;
+    },
+
+    /**
+     * Загружает все настройки
+     * @returns {Object} Объект с настройками
+     */
+    loadPreferences() {
+        try {
+            const data = localStorage.getItem('ege_preferences');
+            if (data) return JSON.parse(data);
+        } catch (e) {
+            console.error('Ошибка загрузки настроек:', e);
+        }
+        return {};
     }
 };

@@ -3,18 +3,203 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Обучение - Карточки для запоминания</title>
+    <title>ЕГЭ Обучение — Тренажёр для подготовки</title>
+
+    <!-- PWA -->
+    <link rel="manifest" href="manifest.json">
+    <meta name="theme-color" content="#6366f1">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="apple-mobile-web-app-title" content="ЕГЭ">
 
     <!-- KaTeX для отображения формул -->
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css">
     <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"></script>
     <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js"></script>
 
+    <!-- Firebase SDK (compat) -->
+    <script defer src="https://www.gstatic.com/firebasejs/10.12.0/firebase-app-compat.js"></script>
+    <script defer src="https://www.gstatic.com/firebasejs/10.12.0/firebase-auth-compat.js"></script>
+    <script defer src="https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore-compat.js"></script>
+
     <link rel="stylesheet" href="css/style.css">
 </head>
 <body>
     <!-- Декоративный фон (генерируется динамически) -->
     <div class="decorations" aria-hidden="true"></div>
+
+    <!-- Подсказка поиска -->
+    <button id="search-hint-btn" class="search-hint-btn" aria-label="Поиск">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+        <span class="search-hint-text">Поиск</span>
+        <kbd class="search-hint-kbd">Ctrl+K</kbd>
+    </button>
+
+    <!-- Глобальный поиск (Ctrl+K) -->
+    <div id="search-overlay" class="search-overlay hidden">
+        <div class="search-panel">
+            <div class="search-input-wrapper">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="search-icon"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+                <input type="text" id="search-input" class="search-input" placeholder="Поиск формул, заданий, литературы..." autocomplete="off">
+                <kbd class="search-kbd">Esc</kbd>
+            </div>
+            <div id="search-results" class="search-results"></div>
+        </div>
+    </div>
+
+    <!-- Кнопка настроек -->
+    <button id="settings-btn" class="settings-btn" aria-label="Настройки">
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <circle cx="12" cy="12" r="3"/>
+            <path d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"/>
+        </svg>
+    </button>
+
+    <!-- Панель настроек -->
+    <div id="settings-overlay" class="settings-overlay hidden">
+        <div class="settings-panel">
+            <div class="settings-header">
+                <h3>Настройки</h3>
+                <button id="settings-close-btn" class="settings-close-btn" aria-label="Закрыть">&times;</button>
+            </div>
+            <div class="settings-body">
+                <!-- Тёмная тема -->
+                <div class="settings-item">
+                    <div class="settings-item-info">
+                        <span class="settings-item-label">Тёмная тема</span>
+                        <span class="settings-item-desc">Тёмный режим для комфортного обучения</span>
+                    </div>
+                    <label class="theme-switch">
+                        <input type="checkbox" id="theme-toggle">
+                        <span class="theme-switch-slider"></span>
+                    </label>
+                </div>
+
+                <!-- Размер шрифта -->
+                <div class="settings-item">
+                    <div class="settings-item-info">
+                        <span class="settings-item-label">Размер шрифта</span>
+                        <span class="settings-item-desc">Размер текста в приложении</span>
+                    </div>
+                    <div class="settings-font-size">
+                        <button class="font-size-btn" data-size="small">A</button>
+                        <button class="font-size-btn active" data-size="normal">A</button>
+                        <button class="font-size-btn" data-size="large">A</button>
+                    </div>
+                </div>
+
+                <!-- Карточек за сессию -->
+                <div class="settings-item">
+                    <div class="settings-item-info">
+                        <span class="settings-item-label">Карточек за сессию</span>
+                        <span class="settings-item-desc">Сколько карточек учить за раз</span>
+                    </div>
+                    <select id="cards-per-session" class="settings-select">
+                        <option value="10">10</option>
+                        <option value="15">15</option>
+                        <option value="20" selected>20</option>
+                        <option value="30">30</option>
+                        <option value="50">50</option>
+                    </select>
+                </div>
+
+                <!-- Анимации -->
+                <div class="settings-item">
+                    <div class="settings-item-info">
+                        <span class="settings-item-label">Анимации</span>
+                        <span class="settings-item-desc">Плавные переходы между экранами</span>
+                    </div>
+                    <label class="theme-switch">
+                        <input type="checkbox" id="animations-toggle" checked>
+                        <span class="theme-switch-slider"></span>
+                    </label>
+                </div>
+
+                <!-- Аккаунт -->
+                <div class="settings-item" id="auth-login-btn">
+                    <div class="settings-item-info">
+                        <span class="settings-item-label">Аккаунт</span>
+                        <span class="settings-item-desc">Синхронизация прогресса между устройствами</span>
+                    </div>
+                    <button class="settings-action-btn" onclick="Auth.openLoginOverlay()">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 3h4a2 2 0 012 2v14a2 2 0 01-2 2h-4"/><polyline points="10 17 15 12 10 7"/><line x1="15" y1="12" x2="3" y2="12"/></svg>
+                        Войти
+                    </button>
+                </div>
+
+                <div class="settings-item hidden" id="auth-logged-in">
+                    <div class="settings-item-info">
+                        <span class="settings-item-label" id="auth-user-email">user@email.com</span>
+                        <span class="settings-item-desc" id="auth-sync-status">Синхронизировано</span>
+                    </div>
+                    <button class="settings-action-btn auth-logout-btn" onclick="Auth.logout()">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 21H5a2 2 0 01-2-2V5a2 2 0 012-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>
+                        Выйти
+                    </button>
+                </div>
+
+                <!-- Разделитель -->
+                <div class="settings-divider"></div>
+
+                <!-- Экспорт / Импорт -->
+                <div class="settings-item settings-item-actions">
+                    <div class="settings-item-info">
+                        <span class="settings-item-label">Данные</span>
+                        <span class="settings-item-desc">Резервная копия вашего прогресса</span>
+                    </div>
+                    <div class="settings-actions">
+                        <button id="export-data-btn" class="settings-action-btn">
+                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+                            Экспорт
+                        </button>
+                        <button id="import-data-btn" class="settings-action-btn">
+                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
+                            Импорт
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Сброс прогресса -->
+                <div class="settings-item">
+                    <div class="settings-item-info">
+                        <span class="settings-item-label">Сброс прогресса</span>
+                        <span class="settings-item-desc">Удалить весь прогресс обучения</span>
+                    </div>
+                    <button id="reset-progress-btn" class="settings-danger-btn">Сбросить</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Overlay входа -->
+    <div id="login-overlay" class="login-overlay hidden">
+        <div class="login-panel">
+            <div class="login-header">
+                <h3>Вход в аккаунт</h3>
+                <button class="settings-close-btn" onclick="Auth.closeLoginOverlay()" aria-label="Закрыть">&times;</button>
+            </div>
+            <div class="login-body">
+                <button class="login-google-btn" onclick="Auth.loginWithGoogle()">
+                    <svg width="18" height="18" viewBox="0 0 48 48"><path fill="#EA4335" d="M24 9.5c3.54 0 6.71 1.22 9.21 3.6l6.85-6.85C35.9 2.38 30.47 0 24 0 14.62 0 6.51 5.38 2.56 13.22l7.98 6.19C12.43 13.72 17.74 9.5 24 9.5z"/><path fill="#4285F4" d="M46.98 24.55c0-1.57-.15-3.09-.38-4.55H24v9.02h12.94c-.58 2.96-2.26 5.48-4.78 7.18l7.73 6c4.51-4.18 7.09-10.36 7.09-17.65z"/><path fill="#FBBC05" d="M10.53 28.59c-.48-1.45-.76-2.99-.76-4.59s.27-3.14.76-4.59l-7.98-6.19C.92 16.46 0 20.12 0 24c0 3.88.92 7.54 2.56 10.78l7.97-6.19z"/><path fill="#34A853" d="M24 48c6.48 0 11.93-2.13 15.89-5.81l-7.73-6c-2.15 1.45-4.92 2.3-8.16 2.3-6.26 0-11.57-4.22-13.47-9.91l-7.98 6.19C6.51 42.62 14.62 48 24 48z"/></svg>
+                    Войти через Google
+                </button>
+
+                <div class="login-divider">
+                    <span>или</span>
+                </div>
+
+                <div class="login-error hidden" id="login-error"></div>
+
+                <input type="email" id="login-email" class="login-input" placeholder="Email" autocomplete="email">
+                <input type="password" id="login-password" class="login-input" placeholder="Пароль" autocomplete="current-password">
+
+                <div class="login-buttons">
+                    <button class="btn btn-primary login-submit-btn" onclick="Auth.loginWithEmail(document.getElementById('login-email').value, document.getElementById('login-password').value)">Войти</button>
+                    <button class="btn btn-secondary login-register-btn" onclick="Auth.registerWithEmail(document.getElementById('login-email').value, document.getElementById('login-password').value)">Регистрация</button>
+                </div>
+            </div>
+        </div>
+    </div>
 
     <div class="container">
         <!-- Главный экран с разделами -->
@@ -33,6 +218,25 @@
                 <div class="section-card" data-section="russian">
                     <span class="section-icon">📝</span>
                     <span class="section-title">Русский</span>
+                </div>
+            </div>
+
+            <!-- Новые фичи -->
+            <div class="features-row">
+                <div class="feature-card" data-feature="trainer">
+                    <span class="feature-icon">🧠</span>
+                    <span class="feature-title">Тренажёр</span>
+                    <span class="feature-desc">Решай задачи</span>
+                </div>
+                <div class="feature-card" data-feature="exam">
+                    <span class="feature-icon">⏱️</span>
+                    <span class="feature-title">Экзамен</span>
+                    <span class="feature-desc">Имитация ЕГЭ</span>
+                </div>
+                <div class="feature-card" data-feature="dashboard">
+                    <span class="feature-icon">📊</span>
+                    <span class="feature-title">Статистика</span>
+                    <span class="feature-desc">Твой прогресс</span>
                 </div>
             </div>
         </div>
@@ -458,6 +662,207 @@
             </div>
             <button id="home-btn" class="btn btn-primary">На главную</button>
         </div>
+
+        <!-- ===== ДАШБОРД СТАТИСТИКИ ===== -->
+        <div id="dashboard-screen" class="screen">
+            <h1>Статистика</h1>
+            <p class="subtitle">Ваш прогресс обучения</p>
+
+            <!-- Обзор: streak, сегодня, всего, точность -->
+            <div class="dash-overview" id="dashboard-overview"></div>
+
+            <!-- Тепловая карта активности -->
+            <div class="dash-section">
+                <h3 class="dash-section-title">Активность</h3>
+                <div class="dash-card" id="dashboard-heatmap"></div>
+            </div>
+
+            <!-- График за неделю -->
+            <div class="dash-section">
+                <h3 class="dash-section-title">За неделю</h3>
+                <div class="dash-card" id="dashboard-weekly"></div>
+            </div>
+
+            <!-- Предметы -->
+            <div class="dash-section">
+                <h3 class="dash-section-title">По предметам</h3>
+                <div class="dash-subjects" id="dashboard-subjects"></div>
+            </div>
+
+            <button id="dashboard-back-btn" class="btn btn-link">← Назад</button>
+        </div>
+
+        <!-- ===== ТРЕНАЖЁР ЗАДАЧ ===== -->
+
+        <!-- Экран выбора категории тренажёра -->
+        <div id="trainer-screen" class="screen">
+            <h1>Тренажёр</h1>
+            <p class="subtitle">Решайте задачи, а не просто запоминайте</p>
+            <div class="trainer-score" id="trainer-score">
+                <div class="trainer-score-item trainer-correct">
+                    <span id="trainer-correct-count">0</span> верно
+                </div>
+                <div class="trainer-score-item trainer-wrong">
+                    <span id="trainer-wrong-count">0</span> ошибок
+                </div>
+            </div>
+            <div class="sections-grid">
+                <div class="section-card" data-trainer="trig">
+                    <span class="section-icon">📐</span>
+                    <span class="section-title">Тригонометрия</span>
+                </div>
+                <div class="section-card" data-trainer="geometry">
+                    <span class="section-icon">📦</span>
+                    <span class="section-title">Геометрия</span>
+                </div>
+                <div class="section-card" data-trainer="algebra">
+                    <span class="section-icon">🔢</span>
+                    <span class="section-title">Алгебра</span>
+                </div>
+                <div class="section-card" data-trainer="cs">
+                    <span class="section-icon">💻</span>
+                    <span class="section-title">Информатика</span>
+                </div>
+            </div>
+            <button id="trainer-back-btn" class="btn btn-link">← Назад</button>
+        </div>
+
+        <!-- Экран задачи тренажёра -->
+        <div id="trainer-problem-screen" class="screen">
+            <div class="trainer-problem-header">
+                <span class="trainer-category-badge" id="trainer-category-badge">Тригонометрия</span>
+                <div class="trainer-score-mini">
+                    <span class="trainer-mini-correct" id="trainer-mini-correct">0</span> /
+                    <span class="trainer-mini-wrong" id="trainer-mini-wrong">0</span>
+                </div>
+            </div>
+
+            <div class="card trainer-card">
+                <div class="card-question" id="trainer-question"></div>
+            </div>
+
+            <div class="trainer-hint hidden" id="trainer-hint">
+                <span class="trainer-hint-icon">💡</span>
+                <span id="trainer-hint-text"></span>
+            </div>
+
+            <div class="answer-section">
+                <input type="text" id="trainer-answer" class="trainer-input" placeholder="Введите ответ..." autocomplete="off">
+                <div class="trainer-buttons">
+                    <button id="trainer-hint-btn" class="btn btn-secondary trainer-hint-btn">Подсказка</button>
+                    <button id="trainer-check-btn" class="btn btn-primary">Проверить</button>
+                </div>
+            </div>
+
+            <!-- Результат проверки -->
+            <div class="trainer-feedback hidden" id="trainer-feedback">
+                <div class="trainer-feedback-icon" id="trainer-feedback-icon"></div>
+                <div class="trainer-feedback-text" id="trainer-feedback-text"></div>
+                <div class="trainer-explanation" id="trainer-explanation"></div>
+                <button id="trainer-next-btn" class="btn btn-primary">Следующая задача</button>
+            </div>
+
+            <button id="trainer-problem-back-btn" class="btn btn-link">← К категориям</button>
+        </div>
+
+        <!-- ===== РЕЖИМ ЭКЗАМЕНА ===== -->
+
+        <!-- Настройка экзамена -->
+        <div id="exam-setup-screen" class="screen">
+            <h1>Экзамен</h1>
+            <p class="subtitle">Имитация реального ЕГЭ</p>
+
+            <div class="exam-setup-card">
+                <div class="exam-setup-row">
+                    <label>Количество заданий</label>
+                    <select id="exam-question-count" class="settings-select">
+                        <option value="10">10</option>
+                        <option value="15">15</option>
+                        <option value="20" selected>20</option>
+                        <option value="30">30</option>
+                    </select>
+                </div>
+                <div class="exam-setup-row">
+                    <label>Время (минуты)</label>
+                    <select id="exam-time" class="settings-select">
+                        <option value="10">10</option>
+                        <option value="15">15</option>
+                        <option value="20" selected>20</option>
+                        <option value="30">30</option>
+                        <option value="45">45</option>
+                    </select>
+                </div>
+            </div>
+
+            <button id="exam-start-btn" class="btn btn-primary">Начать экзамен</button>
+            <button id="exam-setup-back-btn" class="btn btn-link">← Назад</button>
+        </div>
+
+        <!-- Экран экзамена -->
+        <div id="exam-screen" class="screen">
+            <div class="exam-header">
+                <div class="exam-timer-bar">
+                    <div class="exam-timer-progress" id="exam-timer-progress"></div>
+                </div>
+                <div class="exam-info">
+                    <span class="exam-timer" id="exam-timer">20:00</span>
+                    <span class="exam-progress-text">
+                        <span id="exam-current-q">1</span> / <span id="exam-total-q">20</span>
+                    </span>
+                </div>
+            </div>
+
+            <div class="card exam-card">
+                <div class="card-question" id="exam-question"></div>
+            </div>
+
+            <div class="answer-section">
+                <input type="text" id="exam-answer" class="trainer-input" placeholder="Введите ответ..." autocomplete="off">
+            </div>
+
+            <!-- Навигация по вопросам -->
+            <div class="exam-nav">
+                <button id="exam-prev-btn" class="btn btn-secondary" disabled>← Назад</button>
+                <button id="exam-next-btn" class="btn btn-primary">Далее →</button>
+            </div>
+
+            <!-- Карта вопросов -->
+            <div class="exam-question-map" id="exam-question-map"></div>
+
+            <button id="exam-finish-btn" class="btn btn-link" style="color: var(--error);">Завершить экзамен</button>
+        </div>
+
+        <!-- Результат экзамена -->
+        <div id="exam-result-screen" class="screen">
+            <div class="exam-result-header">
+                <div class="exam-result-grade" id="exam-result-grade">5</div>
+                <h2 id="exam-result-label">Отлично!</h2>
+            </div>
+
+            <div class="exam-result-stats">
+                <div class="exam-result-stat">
+                    <span class="exam-result-stat-value" id="exam-result-percent">0%</span>
+                    <span class="exam-result-stat-label">результат</span>
+                </div>
+                <div class="exam-result-stat">
+                    <span class="exam-result-stat-value exam-correct-val" id="exam-result-correct">0</span>
+                    <span class="exam-result-stat-label">верно</span>
+                </div>
+                <div class="exam-result-stat">
+                    <span class="exam-result-stat-value exam-wrong-val" id="exam-result-wrong">0</span>
+                    <span class="exam-result-stat-label">ошибок</span>
+                </div>
+                <div class="exam-result-stat">
+                    <span class="exam-result-stat-value" id="exam-result-time">0:00</span>
+                    <span class="exam-result-stat-label">время</span>
+                </div>
+            </div>
+
+            <!-- Слабые темы -->
+            <div class="exam-weak-topics" id="exam-weak-topics"></div>
+
+            <button id="exam-result-home-btn" class="btn btn-primary">На главную</button>
+        </div>
     </div>
 
     <script src="js/cards.js"></script>
@@ -467,6 +872,14 @@
     <script src="js/cs-data.js"></script>
     <script src="js/sm2.js"></script>
     <script src="js/storage.js"></script>
+    <script src="js/stats.js"></script>
+    <script src="js/dashboard.js"></script>
+    <script src="js/trainer.js"></script>
+    <script src="js/exam.js"></script>
+    <script src="js/search.js"></script>
+    <script src="js/firebase-config.js"></script>
+    <script src="js/cloud-storage.js"></script>
+    <script src="js/auth.js"></script>
     <script src="js/decorations.js"></script>
     <script src="js/app.js"></script>
 </body>
